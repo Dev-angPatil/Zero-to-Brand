@@ -23,7 +23,8 @@ export async function POST(request: NextRequest) {
     const images = await generateBrandImages(
       brandVariables.brandName,
       brandVariables.audioTheme.mood || "organic",
-      brandVariables.adBannerCopy
+      brandVariables.adBannerCopy,
+      brand.productDetails?.imagenPromptDescription
     );
 
     // Update brand with generated logo and banner images, and set completed status
@@ -47,6 +48,7 @@ export async function POST(request: NextRequest) {
         materials: brand.productDetails.materials,
         textures: brand.productDetails.textures,
         craftsmanship: brand.productDetails.craftsmanship,
+        imagenPromptDescription: brand.productDetails.imagenPromptDescription,
       });
     }
 

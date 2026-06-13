@@ -51,7 +51,8 @@ export async function POST(request: NextRequest) {
       brandVars.brandName,
       brandMood,
       copy.name,
-      copy.tagline
+      copy.tagline,
+      analysis.imagenPromptDescription
     );
 
     // 5. Save product in database
@@ -64,6 +65,7 @@ export async function POST(request: NextRequest) {
       materials: analysis.materials,
       textures: analysis.textures,
       craftsmanship: analysis.craftsmanship,
+      imagenPromptDescription: analysis.imagenPromptDescription,
     });
 
     return NextResponse.json(newProduct, { status: 201 });

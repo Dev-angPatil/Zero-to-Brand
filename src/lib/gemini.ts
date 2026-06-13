@@ -18,6 +18,7 @@ export interface IngestResult {
   craftsmanship: string;
   suggestedBrandName: string;
   suggestedTagline: string;
+  imagenPromptDescription: string;
 }
 
 export interface ChatResult {
@@ -63,6 +64,7 @@ export async function analyzeCraftImage(base64Image: string): Promise<IngestResu
       craftsmanship: "Hand-thrown on a foot-powered kick wheel, wood-fired at 1000°C in a traditional draft kiln.",
       suggestedBrandName: "Hearth & Clay",
       suggestedTagline: "Handcrafted Earth for the Modern Home",
+      imagenPromptDescription: "A rustic terracotta clay pot with warm brown and orange natural hues, smooth interior glaze, and raw matte textured ribbed grooves on the exterior, showing minor organic kiln markings.",
     };
   }
 
@@ -77,7 +79,7 @@ export async function analyzeCraftImage(base64Image: string): Promise<IngestResu
             data: parsed.data,
           },
         },
-        "Analyze this artisan craft image and extract details about the product type, raw materials used, surface textures, and cultural craftsmanship. Also suggest a premium brand name and marketing tagline for this item.",
+        "Analyze this artisan craft image and extract details about the product type, raw materials used, surface textures, and cultural craftsmanship. Also suggest a premium brand name, marketing tagline, and a highly detailed, visual description of the physical item in the photo, optimized for use as a subject description in an image generation prompt (e.g., describing its specific shape, colors, glazes, textures, and physical features).",
       ],
       config: {
         responseMimeType: "application/json",
@@ -90,6 +92,7 @@ export async function analyzeCraftImage(base64Image: string): Promise<IngestResu
             craftsmanship: { type: "STRING" },
             suggestedBrandName: { type: "STRING" },
             suggestedTagline: { type: "STRING" },
+            imagenPromptDescription: { type: "STRING" },
           },
           required: [
             "productType",
@@ -98,6 +101,7 @@ export async function analyzeCraftImage(base64Image: string): Promise<IngestResu
             "craftsmanship",
             "suggestedBrandName",
             "suggestedTagline",
+            "imagenPromptDescription",
           ],
         },
       },
@@ -116,6 +120,7 @@ export async function analyzeCraftImage(base64Image: string): Promise<IngestResu
       craftsmanship: "Handmade by local artisan.",
       suggestedBrandName: "Earthbound Crafts",
       suggestedTagline: "Earthy designs, hand-shaped with care",
+      imagenPromptDescription: "A handcrafted ceramic vessel with organic textures and natural earth tones.",
     };
   }
 }
@@ -329,7 +334,8 @@ Format strictly as JSON.
 export async function generateBrandImages(
   brandName: string,
   mood: string,
-  adBannerCopy: string
+  adBannerCopy: string,
+  imagenPromptDescription?: string
 ): Promise<{ logoImage: string; bannerImage: string }> {
   if (isSimulated || !ai) {
     // Wait 2 seconds to simulate network latency
@@ -342,7 +348,7 @@ export async function generateBrandImages(
 
   try {
     // Generate Logo Image using Imagen 3
-    const logoPrompt = `A clean, minimalist vector-style logo mark for an artisan brand named "${brandName}". Styled with a "${mood}" theme. Isolated on a simple solid light background. High quality graphic design, circular emblem, centered.`;
+    const logoPrompt = `A clean, minimalist vector-style logo mark for an artisan brand named "${brandName}"${imagenPromptDescription ? `, inspired by ${imagenPromptDescription}` : ""}. Styled with a "${mood}" theme. Isolated on a simple solid light background. High quality graphic design, circular emblem, centered.`;
     const logoResp = await ai.models.generateImages({
       model: "imagen-3.0-generate-002",
       prompt: logoPrompt,
@@ -357,7 +363,7 @@ export async function generateBrandImages(
     const logoImage = logoBase64 ? `data:image/png;base64,${logoBase64}` : "/images/simulated_logo.png";
 
     // Generate Banner Image using Imagen 3
-    const bannerPrompt = `A premium, sun-drenched product marketing showcase poster for "${brandName}". Slogan: "${adBannerCopy}". Styled with a "${mood}" theme, organic textures, warm rustic lighting, high-end e-commerce style.`;
+    const bannerPrompt = `A premium, sun-drenched product marketing showcase poster for "${brandName}"${imagenPromptDescription ? `, featuring ${imagenPromptDescription}` : ""}. Slogan: "${adBannerCopy}". Styled with a "${mood}" theme, organic textures, warm rustic lighting, high-end e-commerce style.`;
     const bannerResp = await ai.models.generateImages({
       model: "imagen-3.0-generate-002",
       prompt: bannerPrompt,
@@ -450,7 +456,8 @@ export async function generateProductBanner(
   brandName: string,
   mood: string,
   productName: string,
-  productTagline: string
+  productTagline: string,
+  imagenPromptDescription?: string
 ): Promise<string> {
   if (isSimulated || !ai) {
     await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -458,7 +465,7 @@ export async function generateProductBanner(
   }
 
   try {
-    const prompt = `A premium, high-end commercial product showcase photo for "${productName}" by "${brandName}". Tagline: "${productTagline}". Styled in a "${mood}" theme, featuring warm ambient light, organic shadows, elegant styling suitable for a boutique web store. Isolated, high resolution.`;
+    const prompt = `A premium, high-end commercial product showcase photo for "${productName}" by "${brandName}"${imagenPromptDescription ? `, featuring a ${imagenPromptDescription}` : ""}. Tagline: "${productTagline}". Styled in a "${mood}" theme, featuring warm ambient light, organic shadows, elegant styling suitable for a boutique web store. Isolated, high resolution.`;
     const resp = await ai.models.generateImages({
       model: "imagen-3.0-generate-002",
       prompt: prompt,

@@ -6,6 +6,7 @@ export interface ProductDetails {
   materials: string[];
   textures: string[];
   craftsmanship: string;
+  imagenPromptDescription: string;
 }
 
 export interface AestheticDials {
@@ -72,6 +73,7 @@ export interface Product {
   materials: string[];
   textures: string[];
   craftsmanship: string;
+  imagenPromptDescription?: string;
 }
 
 interface DB {

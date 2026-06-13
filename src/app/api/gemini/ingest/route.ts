@@ -47,6 +47,7 @@ export async function POST(request: NextRequest) {
         materials: analysis.materials,
         textures: analysis.textures,
         craftsmanship: analysis.craftsmanship,
+        imagenPromptDescription: analysis.imagenPromptDescription,
       },
       brandVariables: initialBrandVariables,
       chatHistory: [
