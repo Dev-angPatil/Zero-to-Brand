@@ -1,36 +1,106 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🌿 Zero-to-Brand: The Solarpunk Multi-Product Campaign Engine
 
-## Getting Started
+**Zero-to-Brand** is an autonomous design co-pilot and marketing engine tailored for modern artisan creators. It shifts the paradigm from generic product listing sites to premium, brand-aligned visual storytelling ecosystems.
 
-First, run the development server:
+By combining **Gemini 2.5 Flash** visual parsing, **Imagen 3** high-fidelity image rendering, and **Web Audio API** procedural synthesizers, the app helps physical makers turn raw craft photos into a cohesive brand identity, a complete campaign storefront, and a matching sonic signature in seconds.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## 🎨 Solarpunk Design & Philosophy
+The project embraces a **Solarpunk** aesthetic—celebrating local, sustainable craftsmanship, organic eco-technology, and harmony with nature. 
+
+The interface features:
+- A curated natural color palette (sage greens, warm sunflower accents, cream bases).
+- Premium typography pairing serif display headings with clean geometric labels.
+- Soft glassmorphism container styles, smooth transitions, and organic borders.
+- Procedural, ambient sound identities matching the brand's aesthetic dials.
+
+---
+
+## 📐 Architecture & Workflow
+
+```mermaid
+graph TD
+    User([ Artisan Creator ]) -->|1. Upload seed craft photo| Login[Solarpunk Onboarding Gateway]
+    Login -->|2. Gemini 2.5 Flash Analysis| Ingest[Analyze Materials, Textures, Heritage]
+    Ingest -->|3. Generate Brand Identity| BrandVars[Brand Colors, Logo SVGs, Jingle Parameters]
+    
+    BrandVars -->|4. Initialize| Workspace[Brand Workspace Dashboard]
+    
+    Workspace -->|5. Drop product craft photo| ProdIngest[Gemini Product Copywriter & Visual Description]
+    ProdIngest -->|6. Imagen 3.0 Engine| CampaignBanner[Generate Custom Advertising Banner]
+    CampaignBanner -->|7. Persist| db[(Local JSON Database)]
+    
+    Workspace -->|8. Slide over drawer| Drawer[Campaign Customization Console]
+    Drawer -->|Tune Preset & Aspect Ratio| Refiner[Gemini Prompt Refiner]
+    Refiner -->|Regenerate| CampaignBanner
+    Drawer -->|Instant Version Restore| db
+    
+    db -->|Render Live| Storefront[Public Storefront Gallery]
+    db -->|Compose real-time meldoy| Synth[Web Audio Synth Player]
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## ✨ Key Features
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 1. Solarpunk Gateway & Wizard Onboarding
+Creators can log into established brand vaults or drop a signature craft photo (e.g., a glazed ceramic vase) to start a new brand. Gemini automatically extracts:
+- **Materials** (clay, stone, brass)
+- **Textures** (rough, glossy, sand-blasted)
+- **Craftsmanship** (hand-painted, wheel-thrown, hand-forged)
+- **Detailed Visual Description** used to condition Imagen generations.
 
-## Learn More
+### 2. Multi-Product Sandboxed Workspace
+Organize multiple product campaigns inside a clean, responsive dashboard. Adding a product generates customized copywriting (Name, Tagline, Description) and a dedicated advertisement banner.
 
-To learn more about Next.js, take a look at the following resources:
+### 3. Visual Conditioning Banner Generator
+Unlike naive prompt generators, Zero-to-Brand first extracts a comprehensive visual description (`imagenPromptDescription`) using Gemini 2.5 Flash and injects it as the core subject in the Imagen 3 prompt. This ensures the campaign banners actually depict the textures, colors, and glazes of the creator's real physical craft, rather than generic placeholders.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 4. Interactive Campaign Console Drawer
+Slide out the editor panel to tweak campaign text in real-time or fine-tune visuals:
+- **Aspect Ratio Selector**: Generate banners optimized for `16:9 Wide` (landings), `1:1 Square` (socials), `9:16 Story` (mobile campaigns), or `4:3 Classic` (showcases).
+- **Style Presets**: Apply moods like **Solarpunk** (eco-bright), **Cyberpunk** (neon night), **Minimalist** (diffused beige studio), **Vintage** (retro wooden table), and **Cozy** (cinematic sun flare).
+- **Banner History Strip**: Review thumbnails of all generated versions for a product. Clicking any version swaps the active banner immediately with full database persistence.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 5. Procedural Sonic Branding
+Listen to a real-time synthesized musical theme generated based on the brand's aesthetic dials. The Web Audio synthesizer dynamically structures tempos, scale structures (Major, Minor, Pentatonic), and pluck instruments (Acoustic, Bell, Warm Synth) in the workspace and public storefront.
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🛠️ Technical Stack
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Framework**: Next.js 16 (App Router, Turbopack, Tailwind CSS v4)
+- **AI Engine**: Google Gen AI SDK (`@google/genai`)
+  - **Gemini 2.5 Flash**: Visual analysis, copywriting, and prompt refinement.
+  - **Imagen 3.0** (`imagen-3.0-generate-002`): High-fidelity logo and campaign banner generation.
+- **Audio Engine**: Web Audio API (procedural music synthesizer)
+- **Database**: Local JSON Database with automatic schema migrations.
+
+---
+
+## 🚀 Getting Started
+
+### 1. Environment Configuration
+Create a `.env.local` file in the root directory:
+```bash
+GEMINI_API_KEY=your_gemini_api_key_here
+```
+*Note: If no API key is provided, the application runs in a simulated sandbox mode with pre-baked assets so judges can test all features without key dependency.*
+
+### 2. Install Dependencies
+```bash
+npm install
+```
+
+### 3. Start Development Server
+```bash
+npm run dev
+```
+Open [http://localhost:3000](http://localhost:3000) to view the application.
+
+### 4. Build and Compile Verification
+```bash
+npm run build
+```
+The project compiles statically and dynamically, ensuring all TypeScript definitions and App Router routes are fully optimized.
