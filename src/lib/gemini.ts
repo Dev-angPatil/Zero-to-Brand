@@ -484,4 +484,77 @@ export async function generateProductBanner(
   }
 }
 
+export async function refineProductBanner(
+  brandName: string,
+  mood: string,
+  productName: string,
+  productTagline: string,
+  originalDescription: string,
+  userFeedback: string,
+  stylePreset?: string,
+  aspectRatio?: string
+): Promise<string> {
+  if (isSimulated || !ai) {
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    return "/images/simulated_banner.png";
+  }
+
+  try {
+    const presetInstructionsMap: Record<string, string> = {
+      solarpunk: "The image style must follow a Solarpunk aesthetic: eco-tech fusion, bright and vibrant natural colors, abundant green plants and foliage, clean sunlit environment, and highlights of sage green and sunflower yellow.",
+      cyberpunk: "The image style must follow a Cyberpunk aesthetic: a futuristic night setting with glowing neon signs and ambient streetlights, dark rain-slicked reflective pavement, high-contrast pink, magenta, and cyan hues, and high-tech details.",
+      minimalist: "The image style must follow a Studio Minimalist aesthetic: a clean, neutral cream/beige background, simple composition, soft diffused lighting, subtle shadows, and an overall elegant, uncluttered presentation.",
+      vintage: "The image style must follow a Warm Vintage aesthetic: a nostalgic retro feel, warm golden lighting, textured rustic details, set on a dark polished wooden table or shelf, invoking ancestral heritage.",
+      cozy: "The image style must follow a Cinematic Cozy aesthetic: warm sunlight stream filtering through a window, soft dreamy depth of field, gentle lens flare, ambient dust motes in the air, creating a peaceful and warm atmosphere."
+    };
+
+    const presetText = stylePreset && presetInstructionsMap[stylePreset.toLowerCase()]
+      ? presetInstructionsMap[stylePreset.toLowerCase()]
+      : `The image should align with a ${mood} vibe, highlighting the brand identity.`;
+
+    const promptRefinementInstructions = `
+You are an expert AI prompt engineer.
+We have an existing Imagen prompt for a product advertisement banner.
+Original item visual description: "${originalDescription}"
+Product Name: "${productName}"
+Brand Name: "${brandName}"
+Brand Mood/Vibe: "${mood}"
+Product Tagline: "${productTagline}"
+
+Target Style Guide: "${presetText}"
+
+The user wants to refine the product campaign banner based on this feedback: "${userFeedback}"
+
+Write a revised, highly descriptive, single-paragraph prompt for Imagen 3 (imagen-3.0-generate-002) that incorporates this feedback and the style guide while keeping the core product visual description intact. Do NOT include any introductory or explanatory text. Just return the prompt string.
+`;
+
+    const rewriteResponse = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: promptRefinementInstructions,
+    });
+
+    const refinedPrompt = rewriteResponse.text?.trim() || "";
+    console.log("Gemini refined prompt for product banner:", refinedPrompt);
+
+    const validRatios = ["1:1", "3:4", "4:3", "9:16", "16:9"];
+    const targetRatio = validRatios.includes(aspectRatio || "") ? aspectRatio : "16:9";
+
+    const resp = await ai.models.generateImages({
+      model: "imagen-3.0-generate-002",
+      prompt: refinedPrompt || `A premium product showcase photo for "${productName}" by "${brandName}".`,
+      config: {
+        numberOfImages: 1,
+        outputMimeType: "image/jpeg",
+        aspectRatio: targetRatio,
+      },
+    });
+
+    const base64 = resp.generatedImages?.[0]?.image?.imageBytes;
+    return base64 ? `data:image/jpeg;base64,${base64}` : "/images/simulated_banner.png";
+  } catch (error) {
+    console.error("Imagen Banner Refinement Error:", error);
+    return "/images/simulated_banner.png";
+  }
+}
+
 

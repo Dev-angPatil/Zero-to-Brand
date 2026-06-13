@@ -74,6 +74,9 @@ export interface Product {
   textures: string[];
   craftsmanship: string;
   imagenPromptDescription?: string;
+  aspectRatio?: "16:9" | "1:1" | "9:16" | "4:3";
+  stylePreset?: "solarpunk" | "cyberpunk" | "minimalist" | "vintage" | "cozy";
+  bannerHistory?: string[];
 }
 
 interface DB {
@@ -228,10 +231,39 @@ export const dbClient = {
       id: Math.random().toString(36).substring(2, 11),
       brandId,
       createdAt: new Date().toISOString(),
+      bannerHistory: product.campaignImage ? [product.campaignImage] : [],
     };
     db.products.push(newProduct);
     writeDB(db);
     return newProduct;
+  },
+
+  updateProduct(id: string, updates: Partial<Omit<Product, "id" | "brandId" | "createdAt">>): Product | null {
+    const db = readDB();
+    const index = db.products.findIndex((p) => p.id === id);
+    if (index === -1) return null;
+
+    const currentProduct = db.products[index];
+    let bannerHistory = currentProduct.bannerHistory || [];
+    
+    // If we have an existing campaign image in history but bannerHistory is empty/null, populate it
+    if (bannerHistory.length === 0 && currentProduct.campaignImage) {
+      bannerHistory = [currentProduct.campaignImage];
+    }
+
+    if (updates.campaignImage && !bannerHistory.includes(updates.campaignImage)) {
+      bannerHistory = [...bannerHistory, updates.campaignImage];
+    }
+
+    const updatedProduct = {
+      ...currentProduct,
+      ...updates,
+      bannerHistory,
+    };
+
+    db.products[index] = updatedProduct;
+    writeDB(db);
+    return updatedProduct;
   },
 
   deleteProduct(id: string): boolean {

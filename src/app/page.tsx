@@ -43,6 +43,9 @@ interface Product {
   materials: string[];
   textures: string[];
   craftsmanship: string;
+  aspectRatio?: "16:9" | "1:1" | "9:16" | "4:3";
+  stylePreset?: "solarpunk" | "cyberpunk" | "minimalist" | "vintage" | "cozy";
+  bannerHistory?: string[];
 }
 
 function StudioContent() {
@@ -63,6 +66,19 @@ function StudioContent() {
   // Product addition state
   const [isUploadingProduct, setIsUploadingProduct] = useState(false);
   const [uploadProductProgress, setUploadProductProgress] = useState("");
+
+  // Product Customization Console state
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [editName, setEditName] = useState("");
+  const [editTagline, setEditTagline] = useState("");
+  const [editDescription, setEditDescription] = useState("");
+  const [editStylePreset, setEditStylePreset] = useState<"solarpunk" | "cyberpunk" | "minimalist" | "vintage" | "cozy">("solarpunk");
+  const [editAspectRatio, setEditAspectRatio] = useState<"16:9" | "1:1" | "9:16" | "4:3">("16:9");
+  const [feedbackText, setFeedbackText] = useState("");
+  const [isSavingProduct, setIsSavingProduct] = useState(false);
+  const [isRegeneratingProduct, setIsRegeneratingProduct] = useState(false);
+  const [productProgressText, setProductProgressText] = useState("");
 
   // Sonic Player state
   const [isPlaying, setIsPlaying] = useState(false);
@@ -246,8 +262,8 @@ function StudioContent() {
     }
   };
 
-  const deleteProduct = async (e: React.MouseEvent, productId: string) => {
-    e.stopPropagation();
+  const deleteProduct = async (e: React.MouseEvent | null, productId: string) => {
+    if (e) e.stopPropagation();
     if (!confirm("Are you sure you want to delete this product campaign?")) return;
     try {
       const res = await fetch(`/api/products?id=${productId}`, { method: "DELETE" });
@@ -256,6 +272,113 @@ function StudioContent() {
       }
     } catch (error) {
       console.error("Error deleting product:", error);
+    }
+  };
+
+  const handleOpenDrawer = (prod: Product) => {
+    setSelectedProduct(prod);
+    setEditName(prod.name);
+    setEditTagline(prod.tagline);
+    setEditDescription(prod.description);
+    setEditStylePreset(prod.stylePreset || "solarpunk");
+    setEditAspectRatio(prod.aspectRatio || "16:9");
+    setFeedbackText("");
+    setIsDrawerOpen(true);
+  };
+
+  const handleSaveTextEdits = async () => {
+    if (!selectedProduct) return;
+    setIsSavingProduct(true);
+    try {
+      const res = await fetch(`/api/products?id=${selectedProduct.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: editName,
+          tagline: editTagline,
+          description: editDescription,
+          stylePreset: editStylePreset,
+          aspectRatio: editAspectRatio,
+        }),
+      });
+
+      if (res.ok) {
+        const updated = await res.json();
+        setProducts(products.map((p) => (p.id === updated.id ? updated : p)));
+        setIsDrawerOpen(false);
+        setSelectedProduct(null);
+      } else {
+        alert("Failed to save product details.");
+      }
+    } catch (err) {
+      console.error("Error saving product details:", err);
+    } finally {
+      setIsSavingProduct(false);
+    }
+  };
+
+  const handleRegenerateBanner = async () => {
+    if (!selectedProduct) return;
+    setIsRegeneratingProduct(true);
+    setProductProgressText("Gemini is engineering prompt & Imagen is painting...");
+    try {
+      const res = await fetch(`/api/products?id=${selectedProduct.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: editName,
+          tagline: editTagline,
+          description: editDescription,
+          feedback: feedbackText,
+          stylePreset: editStylePreset,
+          aspectRatio: editAspectRatio,
+          regenerate: true
+        }),
+      });
+
+      if (res.ok) {
+        const updated = await res.json();
+        setProducts(products.map((p) => (p.id === updated.id ? updated : p)));
+        setSelectedProduct(updated);
+        setEditName(updated.name);
+        setEditTagline(updated.tagline);
+        setEditDescription(updated.description);
+        setEditStylePreset(updated.stylePreset || "solarpunk");
+        setEditAspectRatio(updated.aspectRatio || "16:9");
+        setFeedbackText("");
+      } else {
+        alert("Failed to regenerate campaign banner.");
+      }
+    } catch (err) {
+      console.error("Error regenerating banner:", err);
+    } finally {
+      setIsRegeneratingProduct(false);
+    }
+  };
+
+  const handleSelectHistoryBanner = async (img: string) => {
+    if (!selectedProduct) return;
+    setIsSavingProduct(true);
+    try {
+      const res = await fetch(`/api/products?id=${selectedProduct.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          activeBanner: img,
+        }),
+      });
+
+      if (res.ok) {
+        const updated = await res.json();
+        setProducts(products.map((p) => (p.id === updated.id ? updated : p)));
+        setSelectedProduct(updated);
+      } else {
+        alert("Failed to update active banner.");
+      }
+    } catch (err) {
+      console.error("Error updating active banner:", err);
+    } finally {
+      setIsSavingProduct(false);
     }
   };
 
@@ -637,7 +760,8 @@ function StudioContent() {
               {products.map((prod) => (
                 <div
                   key={prod.id}
-                  className="bg-surface-container-low border border-outline-variant/30 rounded-[24px] overflow-hidden flex flex-col transform hover:-translate-y-1 transition-all duration-300 relative group shadow-sm hover:shadow-md"
+                  onClick={() => handleOpenDrawer(prod)}
+                  className="bg-surface-container-low border border-outline-variant/30 rounded-[24px] overflow-hidden flex flex-col transform hover:-translate-y-1 transition-all duration-300 relative group shadow-sm hover:shadow-md cursor-pointer"
                 >
                   {/* Campaign Banner visual */}
                   <div className="h-44 relative overflow-hidden bg-surface-container flex items-center justify-center border-b border-outline-variant/25">
@@ -753,6 +877,241 @@ function StudioContent() {
           </div>
         </section>
       </div>
+
+      {/* Product Campaign Console Drawer */}
+      {isDrawerOpen && selectedProduct && (
+        <div className="fixed inset-0 z-50 flex justify-end animate-fade-in">
+          {/* Backdrop blur overlay */}
+          <div
+            className="absolute inset-0 bg-black/45 backdrop-blur-sm transition-opacity"
+            onClick={() => setIsDrawerOpen(false)}
+          ></div>
+
+          {/* Drawer content panel */}
+          <div className="relative w-full max-w-lg bg-surface-container-lowest border-l border-outline-variant/30 h-full shadow-2xl flex flex-col p-6 overflow-y-auto animate-slide-in text-on-surface">
+            {isRegeneratingProduct ? (
+              <div className="flex-grow flex flex-col items-center justify-center text-center p-6 gap-4">
+                <div className="w-16 h-16 rounded-full border-4 border-primary border-t-secondary animate-spin flex items-center justify-center shadow-md">
+                  <span className="material-symbols-outlined text-primary text-2xl">spa</span>
+                </div>
+                <h3 className="font-headline text-xl text-primary animate-pulse">{productProgressText}</h3>
+                <p className="text-xs text-on-surface-variant max-w-xs leading-relaxed">
+                  Rewriting the Imagen generation prompt using Gemini 2.5 Flash to incorporate your styling notes and rendering the new advertisement banner.
+                </p>
+              </div>
+            ) : (
+              <>
+                {/* Header */}
+                <div className="flex justify-between items-center border-b border-outline-variant/20 pb-4 mb-6">
+                  <h3 className="font-headline text-xl font-bold text-primary flex items-center gap-2">
+                    <span className="material-symbols-outlined text-secondary">edit_note</span>
+                    Campaign Console
+                  </h3>
+                  <button
+                    onClick={() => setIsDrawerOpen(false)}
+                    className="p-1 rounded-full hover:bg-surface-container-high transition-colors"
+                  >
+                    <span className="material-symbols-outlined">close</span>
+                  </button>
+                </div>
+
+                {/* Craft visual preview */}
+                <div className="w-full h-48 rounded-[16px] overflow-hidden border border-outline-variant/30 bg-surface-container mb-2 relative">
+                  <img
+                    src={selectedProduct.campaignImage || selectedProduct.rawImage}
+                    alt={selectedProduct.name}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute top-2 left-2 px-2 py-0.5 bg-black/40 text-white rounded text-[9px] font-mono">
+                    Current Campaign Banner
+                  </div>
+                </div>
+
+                {/* Banner History Strip */}
+                {(() => {
+                  const history = selectedProduct.bannerHistory || (selectedProduct.campaignImage ? [selectedProduct.campaignImage] : []);
+                  if (history.length <= 1) return null;
+                  return (
+                    <div className="mb-6 flex flex-col gap-2">
+                      <label className="text-[10px] font-bold font-label uppercase tracking-wider text-on-surface-variant flex items-center gap-1">
+                        <span className="material-symbols-outlined text-[13px] text-primary">history</span>
+                        Banner Version History ({history.length} versions)
+                      </label>
+                      <div className="flex gap-2.5 overflow-x-auto pb-2 scrollbar-thin">
+                        {history.map((img, index) => {
+                          const isActive = selectedProduct.campaignImage === img;
+                          return (
+                            <button
+                              key={index}
+                              type="button"
+                              onClick={() => handleSelectHistoryBanner(img)}
+                              disabled={isSavingProduct}
+                              className={`flex-shrink-0 w-24 h-14 rounded-lg overflow-hidden border-2 transition-all relative cursor-pointer ${
+                                isActive
+                                  ? "border-primary shadow-md scale-95"
+                                  : "border-outline-variant/50 hover:border-outline opacity-75 hover:opacity-100"
+                              }`}
+                            >
+                              <img
+                                src={img}
+                                alt={`Banner Version ${index + 1}`}
+                                className="w-full h-full object-cover"
+                              />
+                              <div className="absolute bottom-0 inset-x-0 bg-black/40 text-[8px] text-white text-center py-0.5 font-mono">
+                                v{index + 1}
+                              </div>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })()}
+
+                {/* Edit Form */}
+                <div className="flex-grow flex flex-col gap-5">
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-bold font-label uppercase tracking-wider text-on-surface-variant">
+                      Campaign Product Name
+                    </label>
+                    <input
+                      type="text"
+                      value={editName}
+                      onChange={(e) => setEditName(e.target.value)}
+                      className="bg-surface border border-outline-variant rounded-xl py-2.5 px-4 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none"
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-bold font-label uppercase tracking-wider text-on-surface-variant">
+                      Marketing Tagline
+                    </label>
+                    <input
+                      type="text"
+                      value={editTagline}
+                      onChange={(e) => setEditTagline(e.target.value)}
+                      className="bg-surface border border-outline-variant rounded-xl py-2.5 px-4 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none italic"
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-bold font-label uppercase tracking-wider text-on-surface-variant">
+                      Product Description
+                    </label>
+                    <textarea
+                      value={editDescription}
+                      onChange={(e) => setEditDescription(e.target.value)}
+                      rows={3}
+                      className="bg-surface border border-outline-variant rounded-xl py-2.5 px-4 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none resize-none leading-relaxed"
+                    />
+                  </div>
+
+                  <div className="w-full h-px bg-outline-variant/30 my-2"></div>
+
+                  {/* Banner Aspect Ratio Selector */}
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-bold font-label uppercase tracking-wider text-on-surface-variant">
+                      Banner Aspect Ratio
+                    </label>
+                    <div className="grid grid-cols-4 gap-2">
+                      {(["16:9", "1:1", "9:16", "4:3"] as const).map((ratio) => (
+                        <button
+                          key={ratio}
+                          type="button"
+                          onClick={() => setEditAspectRatio(ratio)}
+                          className={`py-2 px-1 text-[10px] font-bold rounded-xl border transition-all cursor-pointer text-center ${
+                            editAspectRatio === ratio
+                              ? "bg-primary/10 border-primary text-primary shadow-sm"
+                              : "bg-surface border-outline-variant hover:bg-surface-container-high text-on-surface-variant"
+                          }`}
+                        >
+                          {ratio === "16:9" && "16:9 Wide"}
+                          {ratio === "1:1" && "1:1 Square"}
+                          {ratio === "9:16" && "9:16 Story"}
+                          {ratio === "4:3" && "4:3 Classic"}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Style Preset Selector */}
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-bold font-label uppercase tracking-wider text-on-surface-variant">
+                      Style Preset Mood
+                    </label>
+                    <select
+                      value={editStylePreset}
+                      onChange={(e) => setEditStylePreset(e.target.value as any)}
+                      className="bg-surface border border-outline-variant rounded-xl py-2.5 px-4 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none text-on-surface cursor-pointer"
+                    >
+                      <option value="solarpunk">Solarpunk (Organic Eco-tech)</option>
+                      <option value="cyberpunk">Cyberpunk (Neon Nightscape)</option>
+                      <option value="minimalist">Studio Minimalist (Diffused Beige)</option>
+                      <option value="vintage">Warm Vintage (Retro Woodglow)</option>
+                      <option value="cozy">Cinematic Cozy (Warm Sunflare)</option>
+                    </select>
+                  </div>
+
+                  <div className="flex flex-col gap-1.5">
+                    <div className="flex justify-between items-center">
+                      <label className="text-xs font-bold font-label uppercase tracking-wider text-primary flex items-center gap-1">
+                        <span className="material-symbols-outlined text-[16px] text-secondary">auto_fix_high</span>
+                        Instruct Imagen Banner updates
+                      </label>
+                      <span className="text-[10px] text-outline font-mono">Gemini prompt engineer</span>
+                    </div>
+                    <textarea
+                      value={feedbackText}
+                      onChange={(e) => setFeedbackText(e.target.value)}
+                      placeholder="e.g. 'place it on a dark oak shelf', 'change the lighting to soft warm sunset lights', 'add wild lavender in the background'..."
+                      rows={2}
+                      className="bg-surface border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary rounded-xl py-2.5 px-4 text-sm outline-none resize-none leading-relaxed"
+                    />
+                    <p className="text-[10px] text-outline leading-snug">
+                      Your feedback will be combined with the raw visual details of your craft photo using Gemini to paint a highly aligned marketing banner.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Footer Buttons */}
+                <div className="flex gap-3 border-t border-outline-variant/20 pt-4 mt-6">
+                  <button
+                    onClick={() => {
+                      if (confirm("Delete this product campaign?")) {
+                        deleteProduct(null as any, selectedProduct.id);
+                        setIsDrawerOpen(false);
+                      }
+                    }}
+                    className="px-4 py-3 border border-error text-error hover:bg-error/5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer animate-fade-in"
+                  >
+                    <span className="material-symbols-outlined text-[16px]">delete</span>
+                    Delete
+                  </button>
+                  <button
+                    onClick={handleSaveTextEdits}
+                    disabled={isSavingProduct || isRegeneratingProduct}
+                    className="flex-1 py-3 border border-primary text-primary hover:bg-primary/5 rounded-xl text-xs font-bold transition-colors cursor-pointer disabled:opacity-50"
+                  >
+                    {isSavingProduct ? "Saving..." : "Save Texts"}
+                  </button>
+                  {(feedbackText.trim() !== "" ||
+                    editStylePreset !== (selectedProduct.stylePreset || "solarpunk") ||
+                    editAspectRatio !== (selectedProduct.aspectRatio || "16:9")) && (
+                    <button
+                      onClick={handleRegenerateBanner}
+                      disabled={isSavingProduct || isRegeneratingProduct}
+                      className="flex-1 py-3 bg-primary text-on-primary rounded-xl text-xs font-bold hover:bg-primary-container hover:text-on-primary-container shadow transition-all cursor-pointer flex items-center justify-center gap-1 animate-fade-in"
+                    >
+                      <span className="material-symbols-outlined text-sm">palette</span>
+                      Paint Banner
+                    </button>
+                  )}
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
