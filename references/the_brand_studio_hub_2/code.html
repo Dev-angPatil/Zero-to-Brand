@@ -1,0 +1,269 @@
+<!DOCTYPE html><html class="light" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Brand Studio - Veridian Collective</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600&amp;family=Quicksand:wght@600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "error": "#ba1a1a",
+                      "secondary": "#924c00",
+                      "on-surface-variant": "#504533",
+                      "primary-container": "#f4b41a",
+                      "tertiary-fixed": "#d7e9bd",
+                      "on-primary-fixed": "#271900",
+                      "on-primary-container": "#664800",
+                      "on-secondary-fixed": "#2f1400",
+                      "on-primary-fixed-variant": "#5d4200",
+                      "on-tertiary": "#ffffff",
+                      "on-tertiary-container": "#435231",
+                      "on-error-container": "#93000a",
+                      "surface-dim": "#dddad1",
+                      "surface-variant": "#e5e2da",
+                      "outline-variant": "#d4c4ac",
+                      "surface-container-high": "#ebe8df",
+                      "on-primary": "#ffffff",
+                      "surface-container": "#f1eee5",
+                      "inverse-primary": "#fdbb24",
+                      "on-tertiary-fixed": "#121f05",
+                      "primary-fixed": "#ffdea5",
+                      "error-container": "#ffdad6",
+                      "surface-container-highest": "#e5e2da",
+                      "on-error": "#ffffff",
+                      "surface-bright": "#fcf9f0",
+                      "tertiary": "#546341",
+                      "on-secondary": "#ffffff",
+                      "secondary-container": "#fda055",
+                      "surface-tint": "#7b5800",
+                      "on-secondary-fixed-variant": "#6f3800",
+                      "background": "#fcf9f0",
+                      "on-background": "#1c1c17",
+                      "secondary-fixed-dim": "#ffb781",
+                      "outline": "#827561",
+                      "surface-container-low": "#f6f3ea",
+                      "surface": "#fcf9f0",
+                      "surface-container-lowest": "#ffffff",
+                      "on-surface": "#1c1c17",
+                      "secondary-fixed": "#ffdcc4",
+                      "on-secondary-container": "#703800",
+                      "inverse-surface": "#31312b",
+                      "tertiary-container": "#b3c59b",
+                      "primary-fixed-dim": "#fdbb24",
+                      "on-tertiary-fixed-variant": "#3d4b2b",
+                      "primary": "#7b5800",
+                      "inverse-on-surface": "#f4f1e8",
+                      "tertiary-fixed-dim": "#bbcda3"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "gutter": "24px",
+                      "margin-desktop": "64px",
+                      "md": "24px",
+                      "xl": "80px",
+                      "xs": "4px",
+                      "margin-mobile": "16px",
+                      "sm": "12px",
+                      "lg": "48px",
+                      "base": "8px"
+              },
+              "fontFamily": {
+                      "headline-xl": ["Quicksand"],
+                      "body-md": ["Plus Jakarta Sans"],
+                      "label-md": ["Plus Jakarta Sans"],
+                      "headline-lg-mobile": ["Quicksand"],
+                      "headline-md": ["Quicksand"],
+                      "headline-lg": ["Quicksand"],
+                      "body-lg": ["Plus Jakarta Sans"]
+              },
+              "fontSize": {
+                      "headline-xl": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                      "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                      "label-md": ["14px", { "lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                      "headline-lg-mobile": ["28px", { "lineHeight": "1.2", "fontWeight": "600" }],
+                      "headline-md": ["24px", { "lineHeight": "1.3", "fontWeight": "600" }],
+                      "headline-lg": ["32px", { "lineHeight": "1.2", "fontWeight": "600" }],
+                      "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }]
+              }
+            }
+          }
+        }
+      </script>
+<style>
+        body {
+            background-color: #fcf9f0; /* background */
+            color: #1c1c17; /* on-background */
+        }
+        
+        .glass-card {
+            background: rgba(246, 243, 234, 0.7); /* surface-container-low with opacity */
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(212, 196, 172, 0.4); /* outline-variant */
+            box-shadow: 0 8px 32px rgba(188, 108, 37, 0.05); /* solar-punk shadow */
+        }
+
+        .solar-flare {
+            position: absolute;
+            top: -50%;
+            left: 50%;
+            width: 100vw;
+            height: 100vw;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(circle, rgba(253, 187, 36, 0.15) 0%, rgba(253, 187, 36, 0) 70%); /* inverse-primary light leak */
+            pointer-events: none;
+            z-index: 0;
+            mix-blend-mode: screen;
+        }
+
+        .audio-bar {
+            width: 4px;
+            background-color: #7b5800; /* primary */
+            border-radius: 2px;
+            animation: bounce 1.2s ease-in-out infinite alternate;
+        }
+
+        @keyframes bounce {
+            0% { height: 10px; }
+            100% { height: 40px; }
+        }
+      </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col relative overflow-x-hidden vc-init">
+<!-- Top Navigation (Shell) -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-margin-desktop h-20 bg-surface dark:bg-surface-dim shadow-[0_4px_20px_rgba(188,108,37,0.08)] bg-surface-container-low dark:bg-surface-container-low hidden md:flex">
+<div class="h-12">https://lh3.googleusercontent.com/aida-public/AB6AXuAGaFzdUeGpUZVVhXKt5H1o2rJqw9LWL27iOezThH58lZM-2urKUZvIOGzGh4fkIp52mJt6EdOOuwUpVHBCO6zxlrwj7J_R7si7W-sgT83iv3Q6yoiypuXjSyAqFmcfPjDtcS7a1pDY9jiktNnHJL_kMmbmYgBHa0sOv9YshgFqW3Uo4FxEvVusUF0P0VM57KToL-T_-v04C4F_KWIdmg3ks50eRJQIZ-Z8VUJ-u_FBW7lioPy24ni8hn6saDGFWEVv8atXiYsSECZp</div>
+<nav class="flex gap-lg">
+<a class="text-on-surface-variant font-medium hover:text-secondary-container transition-colors duration-200 font-label-md text-label-md scale-95 active:scale-90 transition-transform" href="#">Studio</a>
+<a class="text-on-surface-variant font-medium hover:text-secondary-container transition-colors duration-200 font-label-md text-label-md scale-95 active:scale-90 transition-transform" href="#">Market</a>
+<a class="text-primary font-bold border-b-2 border-primary pb-1 hover:text-secondary-container transition-colors duration-200 font-label-md text-label-md scale-95 active:scale-90 transition-transform" href="#">Insights</a>
+</nav>
+<div class="flex items-center gap-md text-primary dark:text-primary-fixed">
+<button class="hover:text-secondary-container transition-colors duration-200 scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="hover:text-secondary-container transition-colors duration-200 scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<img alt="Artisan Profile" class="w-10 h-10 rounded-full border border-outline-variant" data-alt="A small, circular profile portrait of a modern artisan, soft natural lighting, warm terracotta tones in the background, professional yet approachable, solar-punk aesthetic with a hint of nature." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCGDxhK46xzQIhQZ7UhRfRWo7zxW0cY5yYoJcf1hbmWl_75ZWijR_XrVrT25cW4jKra10reme-cRMERrjyMCUJZg_G1DFtCIqRoa-ViSY0-Doo7qSlVgsrYFSMdcOIBu2rwq7C5u-DAxK_sq457YSFKcebhBnwNVysBC0Ux1R2USJ3vtEzqd6hYKvkFyAyplLESqKtJJJjXJEgy7svB9WzIXloEDnpVXB5L_QHjTcOpEJDF0tOu4uHKbT3kElzceP-QUUbD3_-fke_n">
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-grow pt-32 pb-32 px-margin-mobile md:px-margin-desktop relative z-10 max-w-[1280px] mx-auto w-full">
+<div class="solar-flare"></div>
+<!-- Header -->
+<div class="text-center mb-xl relative z-10"><div class="mb-md flex justify-center"><div class="w-full max-w-2xl rounded-[24px] overflow-hidden shadow-lg">https://lh3.googleusercontent.com/aida-public/AB6AXuD-9-1-twdYmmwbX6-oVdm5ejpnBnA5M7cA2I4VZan9cdaGSKas18GgOkdLV5tv1WwwY6zvFjt9Tgo4USUHqamVBvwlvHspfwR2xI1K7FcOHRJqJ0nzgRAr2VF3XmcDGitrfyaEAuqNUdzwv5mArDy3sHABy2BatOee8LZQCGfpg-EC61vmcD8YErE_z9N_MThWXGbq79V8GESJm__3dVZqAVF-8eHH4zG-g20g6eMKyYlftP1UXJIL3KSvnPlv9q4vc2LQwQN_Mr8A</div></div><h1 class="font-headline-xl text-headline-lg-mobile md:text-headline-xl text-on-background mb-sm">The Artisan Revolution is Here!</h1><p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">Your global brand is ready to elevate your craft. From zero to hero, your solar-punk identity is now live and prepared for the digital world.</p></div>
+<!-- Asset Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter relative z-10">
+<!-- Card A: E-Commerce Visual -->
+<div class="glass-card rounded-[24px] overflow-hidden flex flex-col transform transition-transform hover:-translate-y-2 duration-300">
+<div class="h-48 relative overflow-hidden bg-surface-variant">
+<img alt="Product Mockup" class="w-full h-full object-cover mix-blend-multiply" data-alt="A clean, sun-drenched e-commerce product mockup featuring handcrafted ceramic mugs on a textured linen surface. Warm golden hour lighting casts soft, natural terracotta-tinted shadows. The setting is minimal, earthy, and organic, perfectly embodying a modern solar-punk artisanal brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDtoOhhw3f5fomliaEouiHCYpMAq4XUh8IHrN1v6BJr8d9iMRlV6_5QaAPy3rvt7vq5oNwFY_MchgIcVZrgRRqY_Ikiss5G3O2aTphlQhlH1OGMHvfPB_jf3fZySdiCRhzBNSFXMtN85DQJJgMmtFKi-CvfuKYoS3GDdbJHB64Q1fHnUAh95PiT1cZ9m4IyOwvy17N3miZ-OrKNk5zrIScTvRefwCszNLYzG5QHCWuNC0mE0tlq4TdB1dkOZ1jkM-wN3Jvumv_qzH_s">
+</div>
+<div class="p-md flex-grow flex flex-col">
+<h3 class="font-headline-md text-headline-md text-on-background mb-xs">Storefront Visual</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-md flex-grow">High-fidelity mockup of your hero product in situ.</p>
+<button class="flex items-center justify-center gap-2 border-2 border-secondary text-primary font-label-md text-label-md py-2 px-4 rounded-full hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-[18px]">download</span>
+                        Download Asset
+                    </button>
+</div>
+</div>
+<!-- Card B: Logo & Brand Mark -->
+<div class="glass-card rounded-[24px] overflow-hidden flex flex-col transform transition-transform hover:-translate-y-2 duration-300">
+<div class="h-48 flex items-center justify-center bg-surface-container">
+<div class="w-24 h-24 rounded-full border border-outline-variant flex items-center justify-center bg-surface shadow-[0_4px_20px_rgba(188,108,37,0.08)]">
+<span class="material-symbols-outlined text-[48px] text-primary" style="font-variation-settings: 'FILL' 1;">spa</span>
+</div>
+</div>
+<div class="p-md flex-grow flex flex-col">
+<h3 class="font-headline-md text-headline-md text-on-background mb-xs">Brand Mark</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-md flex-grow">Minimalist vector logo. Available in primary, inverted, and monochrome.</p>
+<div class="flex gap-2">
+<button class="flex-1 flex items-center justify-center gap-1 border-2 border-secondary text-primary font-label-md text-label-md py-2 px-2 rounded-full hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-[16px]">image</span> PNG
+                        </button>
+<button class="flex-1 flex items-center justify-center gap-1 border-2 border-secondary text-primary font-label-md text-label-md py-2 px-2 rounded-full hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-[16px]">polyline</span> SVG
+                        </button>
+</div>
+</div>
+</div>
+<!-- Card C: Marketing Banner Copy -->
+<div class="glass-card rounded-[24px] overflow-hidden flex flex-col transform transition-transform hover:-translate-y-2 duration-300">
+<div class="h-48 p-md bg-secondary-fixed flex flex-col justify-center relative overflow-hidden">
+<div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#924c00 1px, transparent 1px); background-size: 10px 10px;"></div>
+<p class="font-headline-md text-headline-md text-on-secondary-container relative z-10 text-center leading-tight">"Crafted by sun.<br>Woven by hand."</p>
+</div>
+<div class="p-md flex-grow flex flex-col">
+<h3 class="font-headline-md text-headline-md text-on-background mb-xs">Social Banner</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-md flex-grow">Optimized copy and layout for Instagram and Pinterest campaigns.</p>
+<button class="flex items-center justify-center gap-2 border-2 border-secondary text-primary font-label-md text-label-md py-2 px-4 rounded-full hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-[18px]">share</span>
+                        Share Preview
+                    </button>
+</div>
+</div>
+<!-- Card D: Sonic Identity -->
+<div class="glass-card rounded-[24px] overflow-hidden flex flex-col transform transition-transform hover:-translate-y-2 duration-300">
+<div class="h-48 bg-surface-container flex flex-col items-center justify-center gap-4">
+<div class="flex items-end gap-1 h-12">
+<div class="audio-bar" style="animation-delay: 0.1s;"></div>
+<div class="audio-bar" style="animation-delay: 0.3s;"></div>
+<div class="audio-bar" style="animation-delay: 0.5s;"></div>
+<div class="audio-bar" style="animation-delay: 0.2s;"></div>
+<div class="audio-bar" style="animation-delay: 0.4s;"></div>
+</div>
+<button class="w-12 h-12 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shadow-[0_4px_12px_rgba(188,108,37,0.15)] hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+</div>
+<div class="p-md flex-grow flex flex-col">
+<h3 class="font-headline-md text-headline-md text-on-background mb-xs">Sonic Identity</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-md flex-grow">Acoustic brand theme music. Warm, acoustic guitar and ambient nature sounds.</p>
+<button class="flex items-center justify-center gap-2 border-2 border-secondary text-primary font-label-md text-label-md py-2 px-4 rounded-full hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-[18px]">download</span>
+                        Download Audio
+                    </button>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer Action -->
+<div class="fixed bottom-0 left-0 w-full p-md bg-surface/90 backdrop-blur-md border-t border-outline-variant z-40 md:static md:bg-transparent md:border-none md:p-xl flex justify-center pb-24 md:pb-xl">
+<button class="bg-primary-container text-on-primary-container font-label-md text-label-md py-4 px-8 rounded-[16px] shadow-[0_8px_24px_rgba(244,180,26,0.3)] hover:shadow-[0_12px_32px_rgba(244,180,26,0.4)] hover:-translate-y-1 transition-all duration-300 w-full md:w-auto text-lg flex items-center justify-center gap-2">
+            LAUNCH STOREFRONT LIVE
+            <span class="material-symbols-outlined">rocket_launch</span>
+</button>
+</div>
+<!-- Bottom Navigation (Mobile Shell) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-3 lg:hidden bg-surface-container-highest dark:bg-surface-container-highest rounded-t-xl shadow-lg shadow-[0_-4px_12px_rgba(188,108,37,0.08)]">
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary active:scale-95 transition-transform duration-150 cursor-pointer">
+<span class="material-symbols-outlined mb-1">brush</span>
+<span class="font-label-md text-label-md-mobile">Studio</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary active:scale-95 transition-transform duration-150 cursor-pointer">
+<span class="material-symbols-outlined mb-1">settings_suggest</span>
+<span class="font-label-md text-label-md-mobile">Config</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary active:scale-95 transition-transform duration-150 cursor-pointer">
+<span class="material-symbols-outlined mb-1">smart_toy</span>
+<span class="font-label-md text-label-md-mobile">Co-Pilot</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 active:scale-95 transition-transform duration-150 cursor-pointer">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">style</span>
+<span class="font-label-md text-label-md-mobile">Brand</span>
+</div>
+</nav>
+
+
+</body></html>

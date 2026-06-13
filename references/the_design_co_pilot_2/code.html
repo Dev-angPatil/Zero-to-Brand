@@ -1,0 +1,289 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Veridian Collective - Design Co-Pilot</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600&amp;family=Quicksand:wght@600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "error": "#ba1a1a",
+                      "secondary": "#924c00",
+                      "on-surface-variant": "#504533",
+                      "primary-container": "#f4b41a",
+                      "tertiary-fixed": "#d7e9bd",
+                      "on-primary-fixed": "#271900",
+                      "on-primary-container": "#664800",
+                      "on-secondary-fixed": "#2f1400",
+                      "on-primary-fixed-variant": "#5d4200",
+                      "on-tertiary": "#ffffff",
+                      "on-tertiary-container": "#435231",
+                      "on-error-container": "#93000a",
+                      "surface-dim": "#dddad1",
+                      "surface-variant": "#e5e2da",
+                      "outline-variant": "#d4c4ac",
+                      "surface-container-high": "#ebe8df",
+                      "on-primary": "#ffffff",
+                      "surface-container": "#f1eee5",
+                      "inverse-primary": "#fdbb24",
+                      "on-tertiary-fixed": "#121f05",
+                      "primary-fixed": "#ffdea5",
+                      "error-container": "#ffdad6",
+                      "surface-container-highest": "#e5e2da",
+                      "on-error": "#ffffff",
+                      "surface-bright": "#fcf9f0",
+                      "tertiary": "#546341",
+                      "on-secondary": "#ffffff",
+                      "secondary-container": "#fda055",
+                      "surface-tint": "#7b5800",
+                      "on-secondary-fixed-variant": "#6f3800",
+                      "background": "#fcf9f0",
+                      "on-background": "#1c1c17",
+                      "secondary-fixed-dim": "#ffb781",
+                      "outline": "#827561",
+                      "surface-container-low": "#f6f3ea",
+                      "surface": "#fcf9f0",
+                      "surface-container-lowest": "#ffffff",
+                      "on-surface": "#1c1c17",
+                      "secondary-fixed": "#ffdcc4",
+                      "on-secondary-container": "#703800",
+                      "inverse-surface": "#31312b",
+                      "tertiary-container": "#b3c59b",
+                      "primary-fixed-dim": "#fdbb24",
+                      "on-tertiary-fixed-variant": "#3d4b2b",
+                      "primary": "#7b5800",
+                      "inverse-on-surface": "#f4f1e8",
+                      "tertiary-fixed-dim": "#bbcda3"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "gutter": "24px",
+                      "margin-desktop": "64px",
+                      "md": "24px",
+                      "xl": "80px",
+                      "xs": "4px",
+                      "margin-mobile": "16px",
+                      "sm": "12px",
+                      "lg": "48px",
+                      "base": "8px"
+              },
+              "fontFamily": {
+                      "headline-xl": [
+                              "Quicksand"
+                      ],
+                      "body-md": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "label-md": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "headline-lg-mobile": [
+                              "Quicksand"
+                      ],
+                      "headline-md": [
+                              "Quicksand"
+                      ],
+                      "headline-lg": [
+                              "Quicksand"
+                      ],
+                      "body-lg": [
+                              "Plus Jakarta Sans"
+                      ]
+              },
+              "fontSize": {
+                      "headline-xl": [
+                              "48px",
+                              {
+                                      "lineHeight": "1.1",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-lg-mobile": [
+                              "28px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "1.3",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+    </script>
+<style>
+        .blob-bg {
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='%23fda055' d='M44.7,-76.4C58.8,-69.2,71.8,-59.1,81.4,-46.3C91,-33.5,97.2,-18,97.4,-2.4C97.6,13.2,91.8,28.8,83.2,43.3C74.6,57.8,63.2,71.1,49.2,80.1C35.2,89.1,18.6,93.8,1.3,91.6C-16,89.4,-31.9,80.3,-46.5,70.8C-61.1,61.3,-74.3,51.4,-82.9,38.3C-91.5,25.2,-95.5,8.9,-93.6,-6.6C-91.7,-22.1,-83.9,-36.8,-73.4,-48.9C-62.9,-61,-49.7,-70.5,-35.8,-77.4C-21.9,-84.3,-7.3,-88.6,6.5,-99.8C20.3,-111,30.6,-83.6,44.7,-76.4Z' transform='translate(100 100) scale(1.1)' opacity='0.1' /%3E%3C/svg%3E"),
+                              url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='%23f4b41a' d='M39.9,-65.7C54,-58.5,69.5,-51.9,80.8,-40.5C92.1,-29.1,99.2,-12.9,98.6,2.9C98,18.7,89.7,34.1,78.2,46.5C66.7,58.9,52,68.3,36.5,75.1C21,81.9,4.7,86.1,-11.1,84.1C-26.9,82.1,-42.2,73.9,-55.8,63.2C-69.4,52.5,-81.3,39.3,-87.4,23.5C-93.5,7.7,-93.8,-10.7,-87.3,-26.8C-80.8,-42.9,-67.5,-56.7,-52.3,-63.9C-37.1,-71.1,-20,-71.7,-3.7,-65.7C12.6,-59.7,25.8,-72.9,39.9,-65.7Z' transform='translate(100 100) scale(0.9)' opacity='0.1' /%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: top left, bottom right;
+            background-attachment: fixed;
+            background-size: 800px, 1000px;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface antialiased blob-bg font-body-md h-screen overflow-hidden flex flex-col md:flex-row vc-init">
+<!-- SideNavBar (Hidden on Mobile, Visible on Desktop) -->
+<nav class="hidden lg:flex flex-col h-full p-4 gap-4 bg-surface-container dark:bg-surface-container-high docked left-0 h-full w-64 shadow-none">
+<div class="mb-8">
+<div class="h-10 mb-2">https://lh3.googleusercontent.com/aida-public/AB6AXuDntlrpCzvqlfrDRkcyEBiQqOJ9fGHXIemeLjNtWq3ToC0mnycMlddJafdzEDGhWjCxcSulnPrb4Ma3QlHrPBZlpRVs5jLP-0eW3VEdkKWg2gwDFblJHlx7ddCmn1xbFBq0cWoHqlImWw2fmScHPnd1Hzr5W7Ubj8LuP3iu2CC_ZsorPXyX19hCs2zDbTel0UU3eP9cIKmWSOzPMOANEioU6KPnfFWQIiq4L35agS_OPLY57bNeWLOiYwehP6r0nGwP4suYieHKstAP</div>
+<p class="font-label-md text-label-md text-on-surface-variant">Artisan AI</p>
+</div>
+<button class="bg-primary-container text-on-primary-container font-label-md text-label-md py-3 px-6 rounded-xl w-full text-center hover:bg-inverse-primary transition-colors shadow-[0_4px_20px_rgba(188,108,37,0.08)] mb-4">
+            New Project
+        </button>
+<div class="flex flex-col gap-2 flex-grow">
+<a class="flex items-center gap-3 p-3 text-on-surface-variant hover:bg-surface-variant rounded-xl transition-all duration-200 ease-in-out font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">dashboard</span>
+                Creative Studio
+            </a>
+<a class="flex items-center gap-3 p-3 text-on-surface-variant hover:bg-surface-variant rounded-xl transition-all duration-200 ease-in-out font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">auto_awesome</span>
+                Campaign Config
+            </a>
+<a class="flex items-center gap-3 p-3 bg-primary-container text-on-primary-container rounded-xl font-bold transition-all duration-200 ease-in-out font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">chat_bubble</span>
+                Design Co-Pilot
+            </a>
+<a class="flex items-center gap-3 p-3 text-on-surface-variant hover:bg-surface-variant rounded-xl transition-all duration-200 ease-in-out font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">collections_bookmark</span>
+                Brand Hub
+            </a>
+</div>
+<div class="flex flex-col gap-2 mt-auto border-t border-outline-variant pt-4">
+<a class="flex items-center gap-3 p-3 text-on-surface-variant hover:bg-surface-variant rounded-xl transition-all duration-200 ease-in-out font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">help</span>
+                Support
+            </a>
+<a class="flex items-center gap-3 p-3 text-on-surface-variant hover:bg-surface-variant rounded-xl transition-all duration-200 ease-in-out font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">inventory_2</span>
+                Archive
+            </a>
+</div>
+</nav>
+<!-- TopAppBar (Visible on Desktop if needed, but per split screen logic, we'll focus on canvas) -->
+<!-- Let's integrate TopAppBar elements into the canvas area if needed, or keep it clean for the co-pilot experience. We'll skip TopAppBar to maximize the split screen majesty. -->
+<!-- Main Content Area -->
+<main class="flex-grow flex flex-col md:flex-row h-full overflow-hidden w-full relative z-10 pb-20 lg:pb-0">
+<!-- Left: Preview Canvas -->
+<section class="w-full md:w-1/2 h-1/2 md:h-full p-4 md:p-margin-desktop flex flex-col justify-center items-center relative border-b md:border-b-0 md:border-r border-outline-variant">
+<div class="relative w-full max-w-lg aspect-square bg-surface-container-highest rounded-[24px] shadow-[0_8px_30px_rgba(188,108,37,0.12)] overflow-hidden border border-outline-variant group">
+<img alt="Terracotta vase preview" class="w-full h-full object-cover" data-alt="A beautifully textured, handcrafted terracotta vase sits on a minimalist sun-drenched wooden table. The lighting is soft, warm, and natural, casting a gentle, diffused terracotta-tinted shadow. The aesthetic is solar-punk and earthy, emphasizing the tactile grain of the raw clay against a clean, glowing oatmeal background. The mood is serene, organic, and highly detailed, perfect for an artisan's portfolio preview." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXS_tOnmi5oMWkAurs-Hy1dByauNG6_5Jz60WdSHw3C_QV0uebJi8Ah8TLAy53ytp2G0XpIVVCKCAU6ox-cKcG54ADiVLeexu4Bprn3BJ-4Z3DLybmg-dBP4y5JW_0VCXwOqs88R2RlCUdhCv9ENq65bS_Ex4qaaJC5SzdmqbQgGfy5wCJmpEH8XRCtMfVbHcfm5RMVfF0ylLiXYCPDlqK8LvtZHFjjpqeyo2WEa1SCnmdB-ov6nxohzpDp-R9FD65b9wV7LKv2Z3H">
+<!-- Interactive Bounding Box Overlay -->
+<div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+<div class="border-2 border-primary-container border-dashed w-3/4 h-3/4 rounded-xl relative cursor-crosshair">
+<div class="absolute -top-3 -right-3 bg-primary-container text-on-primary-container p-1 rounded-full shadow-md">
+<span class="material-symbols-outlined text-sm">edit</span>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-8 text-center px-4">
+<h2 class="font-headline-md text-headline-md md:font-headline-lg md:text-headline-lg text-primary mb-2">Raw Canvas</h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-md mx-auto">Select areas on the image to direct the AI's focus, or chat to refine the overall aesthetic.</p>
+</div>
+</section>
+<!-- Right: AI Chat Stream -->
+<section class="w-full md:w-1/2 h-1/2 md:h-full flex flex-col relative bg-surface/80 backdrop-blur-sm">
+<!-- Chat History -->
+<div class="flex-grow overflow-y-auto p-4 md:p-margin-desktop flex flex-col gap-6">
+<!-- AI Message -->
+<div class="flex items-start gap-4 max-w-lg">
+<div class="w-10 h-10 rounded-full bg-tertiary flex-shrink-0 flex items-center justify-center shadow-md">
+<span class="material-symbols-outlined text-on-tertiary" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+</div>
+<div class="bg-tertiary text-on-tertiary p-4 rounded-2xl rounded-tl-none shadow-[0_4px_20px_rgba(188,108,37,0.08)] font-body-md text-body-md">
+                        I see a beautifully textured terracotta vase... Should we accentuate the raw clay grain or focus on a smooth, modern glossy finish?
+                    </div>
+</div>
+<!-- User Action Chips -->
+<div class="flex flex-wrap gap-3 pl-14">
+<button class="bg-surface-container-high border border-outline-variant hover:bg-surface-variant hover:border-primary text-on-surface font-label-md text-label-md py-2 px-4 rounded-full transition-all duration-200 shadow-sm flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-tertiary">texture</span>
+                        Keep it raw and earthy
+                    </button>
+<button class="bg-surface-container-high border border-outline-variant hover:bg-surface-variant hover:border-primary text-on-surface font-label-md text-label-md py-2 px-4 rounded-full transition-all duration-200 shadow-sm flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-primary-container">auto_fix_high</span>
+                        Give it a premium studio polish
+                    </button>
+</div>
+</div>
+<!-- Input Dock -->
+<div class="p-4 md:p-8 border-t border-outline-variant bg-surface">
+<div class="relative max-w-2xl mx-auto flex items-center">
+<input class="w-full bg-surface-container-low border border-outline-variant focus:border-primary-container focus:ring-1 focus:ring-primary-container text-on-surface font-body-md text-body-md rounded-full py-4 pl-6 pr-16 shadow-[0_4px_12px_rgba(188,108,37,0.05)] transition-all" placeholder="Describe your dream design..." type="text">
+<button class="absolute right-2 bg-primary-container hover:bg-inverse-primary text-on-primary-container p-2 rounded-full transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">mic</span>
+</button>
+</div>
+</div><div class="w-full h-12 overflow-hidden flex items-end opacity-80">https://lh3.googleusercontent.com/aida-public/AB6AXuCgE-VJKKMAWWdD-vapby5_nfEj_HZncG7nR_jjI6RJXDL--Co6Y-luT5B5BMPf1BD4Zvl3jDO30_ArZbbyh8q6i0LluuZU4AnHCFcHEA8fcrtI0_y8719rq_4q-X3iKahSnzkZzIjMYWs8fEPCPM7pMYr6IPpCt9HEDyey6LJv186G67Nz1gHvmf9iF7oADWN75SufPyEqv-6tau8xZaSyvFDE98VYAIQjhbjSH8rFsh9XmDXApV9B1vewpyOFpgxyrpSgMKOxXG2R</div>
+</section>
+</main>
+<!-- BottomNavBar (Visible on Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-3 lg:hidden bg-surface-container-highest dark:bg-surface-container-highest shadow-[0_-4px_12px_rgba(188,108,37,0.08)] rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary active:scale-95 transition-transform duration-150 group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary" style="font-variation-settings: 'FILL' 0;">brush</span>
+<span class="font-label-md text-label-md-mobile mt-1">Studio</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary active:scale-95 transition-transform duration-150 group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary" style="font-variation-settings: 'FILL' 0;">settings_suggest</span>
+<span class="font-label-md text-label-md-mobile mt-1">Config</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 active:scale-95 transition-transform duration-150 group" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+<span class="font-label-md text-label-md-mobile mt-1 font-bold">Co-Pilot</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary active:scale-95 transition-transform duration-150 group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary" style="font-variation-settings: 'FILL' 0;">style</span>
+<span class="font-label-md text-label-md-mobile mt-1">Brand</span>
+</a>
+</nav>
+
+
+</body></html>

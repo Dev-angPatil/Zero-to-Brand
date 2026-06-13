@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Veridian Collective - Creative Studio</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600&amp;family=Quicksand:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "error": "#ba1a1a",
+                    "secondary": "#924c00",
+                    "on-surface-variant": "#504533",
+                    "primary-container": "#f4b41a",
+                    "tertiary-fixed": "#d7e9bd",
+                    "on-primary-fixed": "#271900",
+                    "on-primary-container": "#664800",
+                    "on-secondary-fixed": "#2f1400",
+                    "on-primary-fixed-variant": "#5d4200",
+                    "on-tertiary": "#ffffff",
+                    "on-tertiary-container": "#435231",
+                    "on-error-container": "#93000a",
+                    "surface-dim": "#dddad1",
+                    "surface-variant": "#e5e2da",
+                    "outline-variant": "#d4c4ac",
+                    "surface-container-high": "#ebe8df",
+                    "on-primary": "#ffffff",
+                    "surface-container": "#f1eee5",
+                    "inverse-primary": "#fdbb24",
+                    "on-tertiary-fixed": "#121f05",
+                    "primary-fixed": "#ffdea5",
+                    "error-container": "#ffdad6",
+                    "surface-container-highest": "#e5e2da",
+                    "on-error": "#ffffff",
+                    "surface-bright": "#fcf9f0",
+                    "tertiary": "#546341",
+                    "on-secondary": "#ffffff",
+                    "secondary-container": "#fda055",
+                    "surface-tint": "#7b5800",
+                    "on-secondary-fixed-variant": "#6f3800",
+                    "background": "#fcf9f0",
+                    "on-background": "#1c1c17",
+                    "secondary-fixed-dim": "#ffb781",
+                    "outline": "#827561",
+                    "surface-container-low": "#f6f3ea",
+                    "surface": "#fcf9f0",
+                    "surface-container-lowest": "#ffffff",
+                    "on-surface": "#1c1c17",
+                    "secondary-fixed": "#ffdcc4",
+                    "on-secondary-container": "#703800",
+                    "inverse-surface": "#31312b",
+                    "tertiary-container": "#b3c59b",
+                    "primary-fixed-dim": "#fdbb24",
+                    "on-tertiary-fixed-variant": "#3d4b2b",
+                    "primary": "#7b5800",
+                    "inverse-on-surface": "#f4f1e8",
+                    "tertiary-fixed-dim": "#bbcda3"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "24px",
+                    "margin-desktop": "64px",
+                    "md": "24px",
+                    "xl": "80px",
+                    "xs": "4px",
+                    "margin-mobile": "16px",
+                    "sm": "12px",
+                    "lg": "48px",
+                    "base": "8px"
+            },
+            "fontFamily": {
+                    "headline-xl": [
+                            "Quicksand"
+                    ],
+                    "body-md": [
+                            "Plus Jakarta Sans"
+                    ],
+                    "label-md": [
+                            "Plus Jakarta Sans"
+                    ],
+                    "headline-lg-mobile": [
+                            "Quicksand"
+                    ],
+                    "headline-md": [
+                            "Quicksand"
+                    ],
+                    "headline-lg": [
+                            "Quicksand"
+                    ],
+                    "body-lg": [
+                            "Plus Jakarta Sans"
+                    ]
+            },
+            "fontSize": {
+                    "headline-xl": [
+                            "48px",
+                            {
+                                    "lineHeight": "1.1",
+                                    "letterSpacing": "-0.02em",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "body-md": [
+                            "16px",
+                            {
+                                    "lineHeight": "1.6",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "label-md": [
+                            "14px",
+                            {
+                                    "lineHeight": "1.2",
+                                    "letterSpacing": "0.05em",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "headline-lg-mobile": [
+                            "28px",
+                            {
+                                    "lineHeight": "1.2",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "headline-md": [
+                            "24px",
+                            {
+                                    "lineHeight": "1.3",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "headline-lg": [
+                            "32px",
+                            {
+                                    "lineHeight": "1.2",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "body-lg": [
+                            "18px",
+                            {
+                                    "lineHeight": "1.6",
+                                    "fontWeight": "400"
+                            }
+                    ]
+            }
+    },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.on-background');
+        }
+        .organic-border {
+            border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+        }
+        .soft-shadow {
+            box-shadow: 0 4px 20px rgba(188, 108, 37, 0.08);
+        }
+        .dashed-terracotta {
+            background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='24' ry='24' stroke='%23924c00' stroke-width='4' stroke-dasharray='12%2c 12' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col font-body-md text-body-md selection:bg-primary-container selection:text-on-primary-container vc-init">
+<!-- Top Navigation -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-margin-desktop h-20 bg-surface dark:bg-surface-dim shadow-[0_4px_20px_rgba(188,108,37,0.08)] bg-surface-container-low dark:bg-surface-container-low">
+<div class="flex items-center gap-gutter">
+<div class="h-10 w-auto flex items-center"><img alt="Veridian Collective Logo" class="h-full w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuATDUyY4A2-QHb85r4vuFkWa6CfNS1uT-MghwM-JZ0-p6PaVn3isS6pd-KnS4zWSUu7pKHHF66oBMG_IBeXUo0KKaSzH2BMgFUBOv1MuIxSOAb0pIGpcGPgO2OENpueUNcqmxsGTy7qHM4HzAXaOZoy1vscfElXafTxJm_b0V3eTLFu3GG0BuBHOkdnL5BuU0_Ff0xxtKfMVrFWsBVzEHzht548HXKUsHBMP5LOlTdln81m0IXaQod9PyTItcOfnsMG1FZh0mhDvqlL"/></div>
+<nav class="hidden md:flex gap-md font-label-md text-label-md">
+<a class="text-primary font-bold border-b-2 border-primary pb-1 scale-95 active:scale-90 transition-transform" href="#">Studio</a>
+<a class="text-on-surface-variant font-medium hover:text-secondary-container transition-colors duration-200 scale-95 active:scale-90 transition-transform" href="#">Market</a>
+<a class="text-on-surface-variant font-medium hover:text-secondary-container transition-colors duration-200 scale-95 active:scale-90 transition-transform" href="#">Insights</a>
+</nav>
+</div>
+<div class="flex items-center gap-md">
+<span class="hidden lg:inline-block font-label-md text-label-md text-on-surface">Welcome back, Devang</span>
+<div class="flex items-center gap-sm">
+<button class="text-primary hover:text-secondary-container transition-colors duration-200 p-2 rounded-full hover:bg-surface-variant">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-primary hover:text-secondary-container transition-colors duration-200 p-2 rounded-full hover:bg-surface-variant">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-outline-variant organic-border ml-2">
+<img alt="Artisan Profile" class="w-full h-full object-cover" data-alt="A warm, high-quality portrait photograph of a male artisan in a sunlit workshop. He has a friendly expression and is wearing a textured canvas apron over a neutral-toned linen shirt. The lighting is soft and golden, highlighting the handcrafted, organic aesthetic of the surrounding tools and wooden surfaces. The overall mood is approachable, authentic, and steeped in a solar-punk, craft-focused vibe." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsNILdSKr_lp8WepLfWsF1rgJWDw8_sV4LfNX2BQyrTlOTWeVG7LaqbcxUuqy3wNV9vNdR0GrNJDlFvvDfttS8bv9yPkYetV791zCjJ3jC_AgpmBA_9slMmng2x9gfaKFFvzhfeSG1oStiGo-TejW9WwOisTrKOQ76Gpf97v8MclRbN7kvIRBZ5Bi-6IKlbnrEn9nf-kkunFonWVIunRgPhlrV_TYDbVEfFtx6Cc99EhTRmrISYyEEDfv9hENDdicKiSbTGmdqpNU7"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Side Navigation (Desktop) & Bottom Navigation (Mobile) -->
+<div class="hidden lg:flex flex-col h-full p-4 gap-4 docked left-0 h-full w-64 bg-surface-container dark:bg-surface-container-high fixed top-20 bottom-0 z-40 bg-surface-container-low border-r border-surface-variant">
+<div class="flex-1 mt-8 space-y-2">
+<a class="flex items-center gap-3 px-4 py-3 bg-primary-container text-on-primary-container rounded-xl font-bold font-label-md text-label-md transition-all duration-200 ease-in-out hover:bg-surface-variant" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+                Creative Studio
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-xl font-label-md text-label-md transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">auto_awesome</span>
+                Campaign Config
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-xl font-label-md text-label-md transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">chat_bubble</span>
+                Design Co-Pilot
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-variant rounded-xl font-label-md text-label-md transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">collections_bookmark</span>
+                Brand Hub
+            </a>
+</div>
+<div class="mt-auto space-y-2 mb-4">
+<button class="w-full py-3 bg-primary-container text-on-primary-container font-label-md text-label-md rounded-xl hover:bg-secondary-container transition-colors soft-shadow organic-border">
+                New Project
+            </button>
+<div class="pt-4 border-t border-outline-variant/30 space-y-1">
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:bg-surface-variant rounded-xl font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined text-[20px]">help</span>
+                    Support
+                </a>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:bg-surface-variant rounded-xl font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined text-[20px]">inventory_2</span>
+                    Archive
+                </a>
+</div>
+</div>
+</div>
+<!-- Main Content -->
+<main class="flex-1 mt-20 lg:ml-64 p-margin-mobile md:p-margin-desktop lg:p-xl max-w-[1600px] w-full mx-auto flex flex-col lg:flex-row gap-xl pb-24 lg:pb-margin-desktop">
+<!-- Left: Upload Zone -->
+<section class="lg:w-[60%] flex flex-col gap-md">
+<div class="mb-4">
+<h2 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface mb-2">Creative Studio</h2>
+<p class="text-on-surface-variant">Begin your journey here. Drop your raw materials and let's craft something beautiful together.</p>
+</div>
+<div class="relative w-full aspect-[4/3] rounded-[24px] dashed-terracotta bg-surface-container flex flex-col items-center justify-center p-8 text-center cursor-pointer hover:bg-surface-container-high transition-colors group overflow-hidden">
+<!-- Organic shape background element -->
+<div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')] mix-blend-multiply pointer-events-none"></div>
+<div class="w-24 h-24 rounded-full bg-surface flex items-center justify-center mb-6 soft-shadow organic-border group-hover:scale-110 transition-transform duration-300">
+<span class="material-symbols-outlined text-[48px] text-secondary">photo_camera</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">Drag &amp; Drop Your Raw Craft Photo</h3>
+<p class="text-on-surface-variant max-w-sm">Upload high-resolution images of your artisinal goods. We support JPG, PNG, and HEIC up to 50MB.</p>
+<button class="mt-8 px-8 py-3 bg-primary-container text-on-primary-container font-label-md text-label-md rounded-[16px] hover:bg-secondary-container transition-colors soft-shadow inline-flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">upload_file</span>
+                    Browse Files
+                </button>
+</div>
+</section>
+<!-- Right: Recent Drafts -->
+<aside class="lg:w-[40%] flex flex-col gap-md">
+<div class="flex justify-between items-end mb-4 border-b border-outline-variant/30 pb-4">
+<h3 class="font-headline-md text-headline-md text-on-surface">Your Recent Drafts</h3>
+<a class="font-label-md text-label-md text-secondary hover:text-primary transition-colors flex items-center gap-1" href="#">
+                    View Archive <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6">
+<!-- Draft Card 1 -->
+<div class="bg-surface-container rounded-[24px] p-4 soft-shadow border border-outline-variant/50 hover:border-secondary transition-colors group flex gap-4 items-center">
+<div class="w-24 h-24 rounded-[16px] bg-surface-variant flex items-center justify-center overflow-hidden relative">
+<img alt="Pottery Draft" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" data-alt="A close-up, softly lit photograph of an unfinished terracotta clay pot sitting on a rustic wooden workbench. The lighting is warm and natural, casting gentle shadows that emphasize the handcrafted texture of the clay. The background is slightly blurred, showing a sunlit studio environment with subtle green hues. The aesthetic is organic, tactile, and aligned with a solar-punk artisan vibe." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKUhHwCkiI3xnnFlTtt-zSLTKFfUx_eUjp30Nj98T2eWrYizl1Yb0U4WEBjJlkPjSLs81RDnNdB17vJoJUtvN3mEuey0HaE65CAGmO_VN_XZMfNndCrMuxR9ez8C8BaE5XlPQjfMc4-1yAfZ7f73pwOuHtfwtWiSlboZXXPFV--uWn4S7I9-SX6Ae6IAtDhrDAX8gyF5HLga5gmrwQCmXUJMIWtUdti3CPySAju7P6O96MyoLOjaewlVJTK0mmIYiyAtNXwH05NLMG"/>
+<div class="absolute inset-0 bg-secondary/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<div class="flex-1">
+<span class="inline-block px-3 py-1 bg-tertiary-container/30 text-tertiary rounded-full font-label-md text-[12px] mb-2">In Progress</span>
+<h4 class="font-label-md text-label-md text-on-surface mb-1 line-clamp-1">Summer Ceramics Batch</h4>
+<p class="text-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">schedule</span>
+                            Updated 2h ago
+                        </p>
+</div>
+</div>
+<!-- Draft Card 2 (Empty Placeholder) -->
+<div class="bg-surface rounded-[24px] p-4 dashed-terracotta flex gap-4 items-center opacity-70 hover:opacity-100 transition-opacity cursor-pointer">
+<div class="w-24 h-24 rounded-[16px] bg-surface-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-outline">add_photo_alternate</span>
+</div>
+<div class="flex-1">
+<h4 class="font-label-md text-label-md text-on-surface-variant mb-1">New Collection</h4>
+<p class="text-sm text-outline">Ready for upload</p>
+</div>
+</div>
+<!-- Draft Card 3 (Empty Placeholder) -->
+<div class="bg-surface rounded-[24px] p-4 dashed-terracotta flex gap-4 items-center opacity-70 hover:opacity-100 transition-opacity cursor-pointer">
+<div class="w-24 h-24 rounded-[16px] bg-surface-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-outline">add_photo_alternate</span>
+</div>
+<div class="flex-1">
+<h4 class="font-label-md text-label-md text-on-surface-variant mb-1">Market Prep</h4>
+<p class="text-sm text-outline">Ready for upload</p>
+</div>
+</div>
+</div>
+</aside>
+</main>
+<!-- Footer Status -->
+<footer class="fixed bottom-0 left-0 w-full lg:w-[calc(100%-16rem)] lg:ml-64 bg-surface-container-low border-t border-outline-variant/30 px-6 py-2 flex justify-between items-center z-30 hidden lg:flex">
+<div class="flex items-center gap-2 text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px] text-tertiary">cloud_done</span>
+<span class="">All changes synced to Verdian Cloud</span>
+</div>
+<div class="text-sm text-on-surface-variant font-mono">
+            Local Time: <span class="" id="local-time">09:00 PM</span>
+</div>
+</footer>
+<!-- Mobile Bottom Navigation -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-3 lg:hidden bg-surface-container-highest dark:bg-surface-container-highest rounded-t-xl bg-surface-container-highest shadow-[0_-4px_12px_rgba(188,108,37,0.08)] shadow-lg">
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 font-label-md text-label-md-mobile active:scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">brush</span>
+            Studio
+        </a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant font-label-md text-label-md-mobile hover:text-primary active:scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined mb-1">settings_suggest</span>
+            Config
+        </a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant font-label-md text-label-md-mobile hover:text-primary active:scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined mb-1">smart_toy</span>
+            Co-Pilot
+        </a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant font-label-md text-label-md-mobile hover:text-primary active:scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined mb-1">style</span>
+            Brand
+        </a>
+</nav>
+<script>
+        // Simple clock for footer
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const timeElement = document.getElementById('local-time');
+            if(timeElement) {
+                timeElement.textContent = timeString;
+            }
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+    </script>
+<section class="relative w-full h-32 overflow-hidden mt-8 lg:ml-64 lg:w-[calc(100%-16rem)] mb-12">
+<div class="absolute inset-0 z-0">
+<img alt="Artisan Revolution Banner" class="w-full h-full object-cover object-bottom" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDHZzgeRwjFaMSqS30-I6OXizzkBbS5JZsbsnfr5UVVZlxujQbAUPWlI4Xmmdj6mrSMHPVScqxB_PvuMYUQAOo3uUFNMNmgT0Tjpjaj3lOaLFVMjwsL2fSAOS5SFZFXhLx4CY8yLcBDffxO1vfKVmgwvL4uOfJWFRJkTvZehf2cuMybqlOreWG98JyGDDKwkncaW__ANAOwAUEp5WL4agcumkdvAZV4eER407UbC5NL_HFVfVn3L3eCx1Rfx1pk4PmePVcuWNXFeEgF"/>
+</div>
+<div class="absolute inset-0 bg-black/20 z-10 flex items-center justify-center">
+<h2 class="text-white font-headline-md text-headline-md tracking-widest">JOIN THE ARTISAN REVOLUTION</h2>
+</div>
+</section></body></html>
