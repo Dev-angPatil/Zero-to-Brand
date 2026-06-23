@@ -104,3 +104,18 @@ Open [http://localhost:3000](http://localhost:3000) to view the application.
 npm run build
 ```
 The project compiles statically and dynamically, ensuring all TypeScript definitions and App Router routes are fully optimized.
+
+---
+
+## 🤖 AI Developer Notes
+
+### Context & Second Brain Mapping
+- **Second Brain Notes**: Review active tasks and Solarpunk branding goals under:
+  [Ctx - Zero-to-Brand Context](file:///home/deu/Documents/Technical%20&%20Academins/10%20AI/Context/Coding%20Repos/Zero-to-Brand/Ctx%20-%20Zero-to-Brand%20Context.md) and [Ctx - Zero-to-Brand Inbox](file:///home/deu/Documents/Technical%20&%20Academins/10%20AI/Context/Coding%20Repos/Zero-to-Brand/Ctx%20-%20Zero-to-Brand%20Inbox.md).
+
+### Codebase Invariants
+- **Next.js 16 App Router & React 19**: This project uses the new Next.js 16 compiler and React 19 rules. Follow modern async Server Actions and React Server Components (RSC) patterns.
+- **Google Gen AI SDK Wrapper**: Use the official `@google/genai` library client. Do not use legacy `@google/generative-ai` packages. All API requests should route through `src/lib/gemini.ts` (or equivalent SDK initialization helper).
+- **Audio Synthesizer Controls**: The sonic branding logic uses standard browser-native Web Audio API oscillators. Keep synthetic parameters scoped to the user interface dials to prevent browser audio blockage policies before user interaction.
+- **Local Persistence Schema**: Campaign state is written to a JSON database file. Ensure that database schema migrations execute on app bootstrap inside API setup handlers.
+
