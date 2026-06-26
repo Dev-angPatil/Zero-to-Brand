@@ -29,12 +29,6 @@ export default function LoginPage() {
   const [creationProgress, setCreationProgress] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    // Clear any active session when entering login
-    localStorage.removeItem("activeBrandId");
-    fetchBrands();
-  }, []);
-
   const fetchBrands = async () => {
     try {
       const res = await fetch("/api/brands");
@@ -49,6 +43,13 @@ export default function LoginPage() {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    // Clear any active session when entering login
+    localStorage.removeItem("activeBrandId");
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchBrands();
+  }, []);
 
   const handleSelectBrand = (brandId: string) => {
     localStorage.setItem("activeBrandId", brandId);

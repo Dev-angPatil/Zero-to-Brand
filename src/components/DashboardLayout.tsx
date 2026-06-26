@@ -166,21 +166,20 @@ function DashboardLayoutContent({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
   const [activeBrand, setActiveBrand] = useState<Brand | null>(null);
-  const [onboardId, setOnboardId] = useState<string | null>(null);
-  const [isReady, setIsReady] = useState(false);
+  const onboardId = searchParams.get("draftId");
+  const [isReady, setIsReady] = useState(pathname === "/login");
 
   useEffect(() => {
     const activeId = localStorage.getItem("activeBrandId");
     const queryDraftId = searchParams.get("draftId");
-    setOnboardId(queryDraftId);
 
     // If we are on login page, just show it
     if (pathname === "/login") {
-      setIsReady(true);
       return;
     }
 
     const loadBrandContext = async () => {
+      setIsReady(false);
       const targetId = activeId || queryDraftId;
 
       if (!targetId) {

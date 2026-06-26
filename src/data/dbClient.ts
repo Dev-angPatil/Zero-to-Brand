@@ -17,6 +17,9 @@ export interface AestheticDials {
 export interface CampaignConfig {
   destinations: string[];
   aestheticDials: AestheticDials;
+  ownerName?: string;
+  targetAudience?: string;
+  designStyle?: string;
 }
 
 export interface BrandColors {
@@ -77,6 +80,9 @@ export interface Product {
   aspectRatio?: "16:9" | "1:1" | "9:16" | "4:3";
   stylePreset?: "solarpunk" | "cyberpunk" | "minimalist" | "vintage" | "cozy";
   bannerHistory?: string[];
+  sceneDescription?: string;
+  adCopyTone?: string;
+  keywords?: string[];
 }
 
 interface DB {
@@ -84,7 +90,7 @@ interface DB {
   products: Product[];
 }
 
-const DB_PATH = path.join(process.cwd(), "src/data/db.json");
+const DB_PATH = process.env.DB_PATH || path.join(process.cwd(), "src/data/db.json");
 
 // Helper to ensure database is read safely and migrated if needed
 function readDB(): DB {
@@ -98,12 +104,12 @@ function readDB(): DB {
     const raw = JSON.parse(data);
 
     let brands: Brand[] = raw.brands || [];
-    let products: Product[] = raw.products || [];
+    const products: Product[] = raw.products || [];
 
     // Migrate old drafts schema if present
     if (raw.drafts && brands.length === 0) {
       console.log("Migrating old drafts to brands and products...");
-      brands = raw.drafts.map((d: any) => ({
+      brands = raw.drafts.map((d: { id: string; createdAt: string; updatedAt: string; status?: "in_progress" | "completed"; rawImage: string; productDetails?: ProductDetails; config?: CampaignConfig; brandVariables?: BrandVariables; chatHistory?: ChatMessage[] }) => ({
         id: d.id,
         createdAt: d.createdAt,
         updatedAt: d.updatedAt,
@@ -190,9 +196,21 @@ export const dbClient = {
     const index = db.brands.findIndex((b) => b.id === id);
     if (index === -1) return null;
 
+    const currentBrand = db.brands[index];
+
+    const brandVariables = updates.brandVariables
+      ? { ...currentBrand.brandVariables, ...updates.brandVariables }
+      : currentBrand.brandVariables;
+
+    const config = updates.config
+      ? { ...currentBrand.config, ...updates.config }
+      : currentBrand.config;
+
     const updatedBrand = {
-      ...db.brands[index],
+      ...currentBrand,
       ...updates,
+      brandVariables,
+      config,
       updatedAt: new Date().toISOString(),
     };
 

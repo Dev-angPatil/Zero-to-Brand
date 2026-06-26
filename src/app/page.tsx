@@ -46,6 +46,9 @@ interface Product {
   aspectRatio?: "16:9" | "1:1" | "9:16" | "4:3";
   stylePreset?: "solarpunk" | "cyberpunk" | "minimalist" | "vintage" | "cozy";
   bannerHistory?: string[];
+  sceneDescription?: string;
+  adCopyTone?: string;
+  keywords?: string[];
 }
 
 function StudioContent() {
@@ -67,6 +70,13 @@ function StudioContent() {
   const [isUploadingProduct, setIsUploadingProduct] = useState(false);
   const [uploadProductProgress, setUploadProductProgress] = useState("");
 
+  // Product questionnaire modal state
+  const [isProductModalOpen, setIsProductModalOpen] = useState(false);
+  const [pendingProductImage, setPendingProductImage] = useState<string | null>(null);
+  const [productScene, setProductScene] = useState("");
+  const [productTone, setProductTone] = useState("Earthy & Organic");
+  const [productKeywords, setProductKeywords] = useState("");
+
   // Product Customization Console state
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -79,13 +89,14 @@ function StudioContent() {
   const [isSavingProduct, setIsSavingProduct] = useState(false);
   const [isRegeneratingProduct, setIsRegeneratingProduct] = useState(false);
   const [productProgressText, setProductProgressText] = useState("");
+  const [activeTab, setActiveTab] = useState<"poster" | "studio" | "raw">("poster");
 
   // Sonic Player state
   const [isPlaying, setIsPlaying] = useState(false);
   const [audioBars, setAudioBars] = useState<number[]>([10, 10, 10, 10, 10]);
   const audioCtxRef = useRef<AudioContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
-  const loopIntervalRef = useRef<any>(null);
+  const loopIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const playStateRef = useRef<boolean>(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -225,41 +236,157 @@ function StudioContent() {
 
   const processProductFile = async (file: File) => {
     if (!activeBrand) return;
-    setIsUploadingProduct(true);
-    setUploadProductProgress("Ingesting craft materials...");
-
     try {
       const reader = new FileReader();
       reader.onload = async (event) => {
         const base64Image = event.target?.result as string;
         if (!base64Image) throw new Error("Failed to read file");
 
-        setUploadProductProgress("Gemini copywriting & Imagen painting...");
-        const res = await fetch("/api/products", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ brandId: activeBrand.id, rawImage: base64Image }),
-        });
-
-        if (res.ok) {
-          // Refresh products catalog list
-          const prodRes = await fetch(`/api/products?brandId=${activeBrand.id}`);
-          if (prodRes.ok) {
-            const prodData = await prodRes.json();
-            setProducts(prodData);
-          }
-        } else {
-          throw new Error("Failed to generate product campaign");
-        }
-        setIsUploadingProduct(false);
+        setPendingProductImage(base64Image);
+        setProductScene("");
+        setProductTone("Earthy & Organic");
+        setProductKeywords("");
+        setIsProductModalOpen(true);
       };
-
       reader.readAsDataURL(file);
     } catch (error) {
       console.error("Product upload error:", error);
-      alert("Error adding product campaign. Please try again.");
-      setIsUploadingProduct(false);
     }
+  };
+
+  const submitProductCampaign = async () => {
+    if (!activeBrand || !pendingProductImage) return;
+    setIsProductModalOpen(false);
+    setIsUploadingProduct(true);
+    setUploadProductProgress("Ingesting craft materials...");
+
+    try {
+      setUploadProductProgress("Gemini copywriting & modular agents running...");
+      const res = await fetch("/api/products", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          brandId: activeBrand.id,
+          rawImage: pendingProductImage,
+          sceneDescription: productScene,
+          adCopyTone: productTone,
+          keywords: productKeywords.split(",").map((k) => k.trim()).filter(Boolean),
+        }),
+      });
+
+      if (res.ok) {
+        // Refresh products catalog list
+        const prodRes = await fetch(`/api/products?brandId=${activeBrand.id}`);
+        if (prodRes.ok) {
+          const prodData = await prodRes.json();
+          setProducts(prodData);
+        }
+      } else {
+        throw new Error("Failed to generate product campaign");
+      }
+    } catch (error) {
+      console.error("Product upload error:", error);
+      alert("Error adding product campaign. Please try again.");
+    } finally {
+      setIsUploadingProduct(false);
+      setPendingProductImage(null);
+    }
+  };
+
+  const downloadPosterImage = (product: Product, brandVars: BrandVariables) => {
+    const canvas = document.createElement("canvas");
+    canvas.width = 800;
+    canvas.height = 1200;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    // 1. Background fill
+    ctx.fillStyle = brandVars.colors.background || "#f7faf2";
+    ctx.fillRect(0, 0, 800, 1200);
+
+    // 2. Draw border
+    ctx.strokeStyle = brandVars.colors.primary || "#264e2b";
+    ctx.lineWidth = 15;
+    ctx.strokeRect(30, 30, 740, 1140);
+    
+    // 3. Draw a inner thin border
+    ctx.strokeStyle = brandVars.colors.secondary || "#fcd03d";
+    ctx.lineWidth = 2;
+    ctx.strokeRect(45, 45, 710, 1110);
+
+    // 4. Draw Brand Name (Top Center)
+    ctx.fillStyle = brandVars.colors.primary || "#264e2b";
+    ctx.textAlign = "center";
+    ctx.font = "bold 32px Georgia, serif";
+    ctx.fillText(brandVars.brandName.toUpperCase(), 400, 100);
+
+    // 5. Draw Brand Tagline
+    ctx.font = "italic 18px Arial, sans-serif";
+    ctx.fillStyle = brandVars.colors.primary || "#264e2b";
+    ctx.fillText(`“ ${brandVars.tagline} ”`, 400, 130);
+
+    // 6. Draw Studio Product Image (Center)
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => {
+      ctx.drawImage(img, 80, 180, 640, 500);
+
+      // 7. Draw star emblem overlay
+      ctx.fillStyle = brandVars.colors.secondary || "#fcd03d";
+      ctx.beginPath();
+      ctx.arc(400, 180, 40, 0, 2 * Math.PI);
+      ctx.fill();
+      ctx.fillStyle = brandVars.colors.primary || "#264e2b";
+      ctx.font = "bold 20px Arial, sans-serif";
+      ctx.fillText("★", 400, 188);
+
+      // 8. Draw Product Title (Below image)
+      ctx.fillStyle = brandVars.colors.primary || "#264e2b";
+      ctx.font = "bold 44px Georgia, serif";
+      ctx.fillText(product.name, 400, 750);
+
+      // 9. Draw Product Tagline
+      ctx.font = "italic 22px Arial, sans-serif";
+      ctx.fillStyle = brandVars.colors.secondary || "#fcd03d";
+      ctx.fillText(product.tagline, 400, 790);
+
+      // 10. Draw Product Description (Wrapped paragraphs)
+      ctx.font = "18px Arial, sans-serif";
+      ctx.fillStyle = "#333333";
+      const descWords = product.description.split(" ");
+      let line = "";
+      let y = 840;
+      for (let n = 0; n < descWords.length; n++) {
+        const testLine = line + descWords[n] + " ";
+        const metrics = ctx.measureText(testLine);
+        const testWidth = metrics.width;
+        if (testWidth > 600 && n > 0) {
+          ctx.fillText(line, 400, y);
+          line = descWords[n] + " ";
+          y += 28;
+        } else {
+          line = testLine;
+        }
+      }
+      ctx.fillText(line, 400, y);
+
+      // 11. Draw Keywords (Bottom tags)
+      const tags = product.keywords || [];
+      if (tags.length > 0) {
+        ctx.font = "bold 14px Arial, sans-serif";
+        ctx.fillStyle = brandVars.colors.primary || "#264e2b";
+        ctx.fillText(tags.map((t) => `#${t}`).join("  •  "), 400, 1080);
+      }
+
+      // 12. Trigger download
+      const dataUrl = canvas.toDataURL("image/png");
+      const link = document.createElement("a");
+      link.download = `${product.name.toLowerCase().replace(/\s+/g, "_")}_poster.png`;
+      link.href = dataUrl;
+      link.click();
+    };
+    
+    img.src = product.campaignImage || product.rawImage;
   };
 
   const deleteProduct = async (e: React.MouseEvent | null, productId: string) => {
@@ -407,7 +534,7 @@ function StudioContent() {
     if (!activeBrand || !activeBrand.brandVariables) return;
     const theme = activeBrand.brandVariables.audioTheme;
 
-    const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+    const AudioContextClass = window.AudioContext || (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
     const ctx = new AudioContextClass();
     audioCtxRef.current = ctx;
 
@@ -527,7 +654,7 @@ function StudioContent() {
     loopIntervalRef.current = setInterval(scheduleNextNotes, intervalMs);
   };
 
-  const stopJingle = () => {
+  function stopJingle() {
     playStateRef.current = false;
     setIsPlaying(false);
 
@@ -653,7 +780,8 @@ function StudioContent() {
   }
 
   // --- BRAND COMPLETED WORKSPACE INTERFACE ---
-  const brandVars = activeBrand?.brandVariables!;
+  const brandVars = activeBrand?.brandVariables;
+  if (!brandVars) return null;
 
   return (
     <div className="max-w-[1400px] w-full mx-auto flex flex-col gap-8 pb-32">
@@ -872,7 +1000,7 @@ function StudioContent() {
           <div className="bg-surface-container-low p-5 rounded-[24px] border border-outline-variant/30 flex flex-col gap-2">
             <h4 className="font-headline text-md text-primary font-bold">Campaign Integration</h4>
             <p className="text-xs text-on-surface-variant leading-relaxed">
-              Every product added represents a new campaign slot. Gemini automatically incorporates your brand's philosophy and aesthetic dials into each listing. Banners are rendered using Imagen 3 in a setting tailored to your vibe.
+              Every product added represents a new campaign slot. Gemini automatically incorporates your brand&apos;s philosophy and aesthetic dials into each listing. Banners are rendered using Imagen 3 in a setting tailored to your vibe.
             </p>
           </div>
         </section>
@@ -915,17 +1043,107 @@ function StudioContent() {
                   </button>
                 </div>
 
-                {/* Craft visual preview */}
-                <div className="w-full h-48 rounded-[16px] overflow-hidden border border-outline-variant/30 bg-surface-container mb-2 relative">
-                  <img
-                    src={selectedProduct.campaignImage || selectedProduct.rawImage}
-                    alt={selectedProduct.name}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute top-2 left-2 px-2 py-0.5 bg-black/40 text-white rounded text-[9px] font-mono">
-                    Current Campaign Banner
-                  </div>
+                {/* Tab Navigation */}
+                <div className="flex gap-2 mb-4 border-b border-outline-variant/20 pb-2">
+                  {(["poster", "studio", "raw"] as const).map((tab) => (
+                    <button
+                      key={tab}
+                      onClick={() => setActiveTab(tab)}
+                      className={`px-3 py-1.5 text-xs font-bold font-label rounded-lg transition-colors cursor-pointer ${
+                        activeTab === tab
+                          ? "bg-primary text-on-primary shadow-sm"
+                          : "text-on-surface-variant hover:bg-surface-container-high"
+                      }`}
+                    >
+                      {tab === "poster" && "Marketing Poster"}
+                      {tab === "studio" && "Studio Image"}
+                      {tab === "raw" && "Original Craft"}
+                    </button>
+                  ))}
                 </div>
+
+                {/* Tab Content */}
+                {activeTab === "poster" && activeBrand?.brandVariables && (
+                  <div className="flex flex-col gap-4 animate-fade-in mb-6">
+                    {/* HTML Poster Preview */}
+                    <div 
+                      className="w-full rounded-[24px] border p-6 flex flex-col items-center text-center shadow-sm relative overflow-hidden"
+                      style={{ 
+                        backgroundColor: activeBrand.brandVariables.colors.background,
+                        borderColor: activeBrand.brandVariables.colors.primary,
+                        borderWidth: "12px"
+                      }}
+                    >
+                      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')] opacity-5 pointer-events-none"></div>
+                      
+                      <span className="text-[10px] font-bold font-mono uppercase tracking-widest text-outline">
+                        {activeBrand.brandVariables.brandName}
+                      </span>
+                      <h4 className="font-headline text-lg font-bold text-on-surface leading-none mt-1">
+                        {selectedProduct.name}
+                      </h4>
+                      <p className="text-[11px] font-mono text-secondary font-bold uppercase tracking-wider italic mt-0.5">
+                        &ldquo;{selectedProduct.tagline}&rdquo;
+                      </p>
+
+                      <div className="w-full aspect-video rounded-xl overflow-hidden border border-outline-variant/40 bg-surface-container-high my-4">
+                        <img 
+                          src={selectedProduct.campaignImage || selectedProduct.rawImage} 
+                          alt="Poster Studio Preview" 
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+
+                      <p className="text-xs text-on-surface-variant leading-relaxed max-w-sm">
+                        {selectedProduct.description}
+                      </p>
+
+                      {selectedProduct.keywords && selectedProduct.keywords.length > 0 && (
+                        <div className="flex flex-wrap gap-1 justify-center mt-3">
+                          {selectedProduct.keywords.map((kw, idx) => (
+                            <span key={idx} className="text-[10px] font-bold font-mono text-primary/80">
+                              #{kw}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    <button
+                      onClick={() => downloadPosterImage(selectedProduct, activeBrand.brandVariables!)}
+                      className="w-full py-3 bg-secondary text-on-secondary rounded-xl font-label text-xs font-bold hover:opacity-95 shadow transition-all cursor-pointer flex items-center justify-center gap-2"
+                    >
+                      <span className="material-symbols-outlined text-sm">download</span>
+                      Download Marketing Poster
+                    </button>
+                  </div>
+                )}
+
+                {activeTab === "studio" && (
+                  <div className="w-full aspect-video rounded-[16px] overflow-hidden border border-outline-variant/30 bg-surface-container mb-6 relative animate-fade-in">
+                    <img
+                      src={selectedProduct.campaignImage || selectedProduct.rawImage}
+                      alt={selectedProduct.name}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute top-2 left-2 px-2 py-0.5 bg-black/40 text-white rounded text-[9px] font-mono">
+                      Generated Studio Image (Imagen 3.0)
+                    </div>
+                  </div>
+                )}
+
+                {activeTab === "raw" && (
+                  <div className="w-full aspect-video rounded-[16px] overflow-hidden border border-outline-variant/30 bg-surface-container mb-6 relative animate-fade-in">
+                    <img
+                      src={selectedProduct.rawImage}
+                      alt={selectedProduct.name}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute top-2 left-2 px-2 py-0.5 bg-black/40 text-white rounded text-[9px] font-mono">
+                      Original Uploaded Craft Photo
+                    </div>
+                  </div>
+                )}
 
                 {/* Banner History Strip */}
                 {(() => {
@@ -1041,7 +1259,7 @@ function StudioContent() {
                     </label>
                     <select
                       value={editStylePreset}
-                      onChange={(e) => setEditStylePreset(e.target.value as any)}
+                      onChange={(e) => setEditStylePreset(e.target.value as "solarpunk" | "cyberpunk" | "minimalist" | "vintage" | "cozy")}
                       className="bg-surface border border-outline-variant rounded-xl py-2.5 px-4 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none text-on-surface cursor-pointer"
                     >
                       <option value="solarpunk">Solarpunk (Organic Eco-tech)</option>
@@ -1078,7 +1296,7 @@ function StudioContent() {
                   <button
                     onClick={() => {
                       if (confirm("Delete this product campaign?")) {
-                        deleteProduct(null as any, selectedProduct.id);
+                        deleteProduct(null, selectedProduct.id);
                         setIsDrawerOpen(false);
                       }
                     }}
@@ -1109,6 +1327,158 @@ function StudioContent() {
                 </div>
               </>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* Product Onboarding Questionnaire Modal */}
+      {isProductModalOpen && pendingProductImage && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in">
+          {/* Backdrop blur overlay */}
+          <div
+            className="absolute inset-0 bg-black/55 backdrop-blur-md transition-opacity"
+            onClick={() => {
+              setIsProductModalOpen(false);
+              setPendingProductImage(null);
+            }}
+          ></div>
+
+          {/* Modal Container */}
+          <div className="relative w-full max-w-lg bg-surface border-2 border-primary/20 rounded-[28px] shadow-2xl flex flex-col p-8 overflow-y-auto max-h-[90vh] animate-scale-up text-on-surface z-10">
+            {/* Solar flare design background detail */}
+            <div className="absolute -top-[10%] -left-[10%] w-[120%] h-[120%] bg-gradient-to-br from-primary/5 to-transparent pointer-events-none rounded-full"></div>
+
+            {/* Header */}
+            <div className="flex justify-between items-start border-b border-outline-variant/30 pb-4 mb-6 relative">
+              <div>
+                <h3 className="font-headline text-2xl font-bold text-primary flex items-center gap-2">
+                  <span className="material-symbols-outlined text-secondary">temp_preferences_custom</span>
+                  Campaign Settings
+                </h3>
+                <p className="text-xs text-on-surface-variant mt-1 leading-relaxed">
+                  Help Gemini and Imagen craft the perfect advertisement and poster setting for your product.
+                </p>
+              </div>
+              <button
+                onClick={() => {
+                  setIsProductModalOpen(false);
+                  setPendingProductImage(null);
+                }}
+                className="p-1.5 rounded-full hover:bg-surface-container-high transition-colors cursor-pointer"
+              >
+                <span className="material-symbols-outlined text-lg">close</span>
+              </button>
+            </div>
+
+            {/* Content Form */}
+            <div className="flex flex-col gap-5 relative">
+              {/* Product Preview Thumbnail */}
+              <div className="flex items-center gap-4 p-3 bg-surface-container-low rounded-2xl border border-outline-variant/20">
+                <div className="w-16 h-16 rounded-xl overflow-hidden bg-surface-container flex-shrink-0">
+                  <img src={pendingProductImage} alt="Pending Product" className="w-full h-full object-cover" />
+                </div>
+                <div>
+                  <h4 className="text-xs font-bold font-label uppercase tracking-wide text-primary">Raw Photo Loaded</h4>
+                  <p className="text-[11px] text-on-surface-variant leading-snug mt-0.5">
+                    Gemini will analyze textures, craftsmanship, and materials directly from this image.
+                  </p>
+                </div>
+              </div>
+
+              {/* Scene Backdrop Field */}
+              <div className="flex flex-col gap-1.5">
+                <div className="flex justify-between items-center">
+                  <label className="text-xs font-bold font-label uppercase tracking-wider text-on-surface-variant">
+                    Desired Scene Backdrop
+                  </label>
+                  <span className="text-[10px] text-outline font-mono">Imagen 3 setting</span>
+                </div>
+                <select
+                  value={productScene}
+                  onChange={(e) => setProductScene(e.target.value)}
+                  className="bg-surface border border-outline-variant rounded-xl py-2.5 px-4 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none text-on-surface cursor-pointer"
+                >
+                  <option value="">(Default) Seamless studio background tailored to brand vibe</option>
+                  <option value="minimalist sun-drenched concrete plinth with soft eucalyptus shadows">Minimalist Plinth &amp; Eucalyptus Shadows</option>
+                  <option value="warm, rustic reclaimed oak tabletop, soft ambient sunflare background">Cozy Reclaimed Oak Tabletop</option>
+                  <option value="outdoor raw mossy forest stone ledge, natural morning dew, soft focus pine trees">Mossy Forest Ledge (Outdoors)</option>
+                  <option value="modern clean kitchen counter, bright natural window light, elegant organic backdrop">Bright Modern Kitchen Counter</option>
+                  <option value="sleek dark slate slab, dramatic spotlight, premium luxury mist">Premium Dark Slate (Dramatic Spotlight)</option>
+                  <option value="eco-friendly bamboo stand in a lush indoor greenhouse conservatory, diffused skylight">Greenhouse Conservatory (Eco-tech)</option>
+                </select>
+                <p className="text-[10px] text-outline leading-snug">
+                  If left default, the modular Preference/Designer Agent uses your brand&apos;s dials to formulate a contextually perfect backdrop.
+                </p>
+              </div>
+
+              {/* Ad Copy Copywriting Tone */}
+              <div className="flex flex-col gap-1.5">
+                <label className="text-xs font-bold font-label uppercase tracking-wider text-on-surface-variant">
+                  Ad Copywriting Tone
+                </label>
+                <div className="grid grid-cols-3 gap-2">
+                  {[
+                    { tone: "Earthy & Organic", desc: "Sustainable & Warm" },
+                    { tone: "Exquisite & Modern", desc: "Refined & Sleek" },
+                    { tone: "Minimalist & Bold", desc: "Clean & Punchy" }
+                  ].map((item) => (
+                    <button
+                      key={item.tone}
+                      type="button"
+                      onClick={() => setProductTone(item.tone)}
+                      className={`py-2.5 px-2 text-[10px] font-bold rounded-xl border transition-all cursor-pointer text-center flex flex-col items-center justify-center gap-0.5 ${
+                        productTone === item.tone
+                          ? "bg-primary/10 border-primary text-primary shadow-sm"
+                          : "bg-surface border-outline-variant hover:bg-surface-container-high text-on-surface-variant"
+                      }`}
+                    >
+                      <span className="font-semibold">{item.tone}</span>
+                      <span className="text-[8px] opacity-75 font-normal">{item.desc}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Keywords Tagging */}
+              <div className="flex flex-col gap-1.5">
+                <div className="flex justify-between items-center">
+                  <label className="text-xs font-bold font-label uppercase tracking-wider text-on-surface-variant">
+                    Marketing Keywords / Hashtags
+                  </label>
+                  <span className="text-[10px] text-outline font-mono">Comma-separated</span>
+                </div>
+                <input
+                  type="text"
+                  placeholder="e.g. handmade, organic, solarpunk, earthware, timeless"
+                  value={productKeywords}
+                  onChange={(e) => setProductKeywords(e.target.value)}
+                  className="bg-surface border border-outline-variant rounded-xl py-2.5 px-4 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none placeholder:text-outline/60"
+                />
+                <p className="text-[10px] text-outline leading-snug">
+                  These keywords are utilized by the Designer Agent to frame the layout and are featured at the bottom of your marketing poster.
+                </p>
+              </div>
+            </div>
+
+            {/* Footer Buttons */}
+            <div className="flex gap-3 border-t border-outline-variant/30 pt-5 mt-6 relative">
+              <button
+                onClick={() => {
+                  setIsProductModalOpen(false);
+                  setPendingProductImage(null);
+                }}
+                className="flex-1 py-3 border border-outline hover:bg-surface-container-low rounded-xl text-xs font-bold transition-colors cursor-pointer text-on-surface"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={submitProductCampaign}
+                className="flex-grow flex-1 py-3 bg-primary text-on-primary rounded-xl text-xs font-bold hover:bg-primary-container shadow transition-all cursor-pointer flex items-center justify-center gap-1.5"
+              >
+                <span className="material-symbols-outlined text-sm">palette</span>
+                Create Campaign
+              </button>
+            </div>
           </div>
         </div>
       )}

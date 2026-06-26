@@ -4,6 +4,12 @@
 
 By combining **Gemini 2.5 Flash** visual parsing, **Imagen 3** high-fidelity image rendering, and **Web Audio API** procedural synthesizers, the app helps physical makers turn raw craft photos into a cohesive brand identity, a complete campaign storefront, and a matching sonic signature in seconds.
 
+## 🏆 Competition
+- **Hackathon**: [Ship to Get Hired - Gappy AI Hackathon](https://unstop.com/hackathons/gappy-ai-hackathon-gappy-ai-1694233)
+- **Tracks**: AI Product Engineer / AI Product Manager
+- **Prizes Targeted**: ₹1 Lakh (1st Prize: ₹50,000, 2nd: ₹30,000, 3rd: ₹20,000)
+- **Platform**: [Unstop](https://unstop.com/hackathons/gappy-ai-hackathon-gappy-ai-1694233)
+
 ---
 
 ## 🎨 Solarpunk Design & Philosophy

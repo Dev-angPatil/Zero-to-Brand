@@ -59,7 +59,7 @@ export default function Storefront() {
 
   // Audio refs
   const audioCtxRef = useRef<AudioContext | null>(null);
-  const loopIntervalRef = useRef<any>(null);
+  const loopIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     if (!brandId) return;
@@ -112,7 +112,7 @@ export default function Storefront() {
     if (!brand) return;
     const theme = brand.brandVariables.audioTheme;
 
-    const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+    const AudioContextClass = window.AudioContext || (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
     const ctx = new AudioContextClass();
     audioCtxRef.current = ctx;
 
@@ -223,7 +223,7 @@ export default function Storefront() {
     loopIntervalRef.current = setInterval(scheduleNotes, intervalMs);
   };
 
-  const stopJingle = () => {
+  function stopJingle() {
     setIsPlaying(false);
     if (loopIntervalRef.current) {
       clearInterval(loopIntervalRef.current);

@@ -27,6 +27,7 @@ export async function POST(request: NextRequest) {
 
     // Prepare updated brand variables
     const updatedBrandVariables = {
+      ...brand.brandVariables,
       brandName: chatResult.brandName,
       brandDescription: chatResult.brandDescription,
       tagline: chatResult.tagline,

@@ -44,7 +44,7 @@ function BrandContent() {
   // Audio refs
   const audioCtxRef = useRef<AudioContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
-  const loopIntervalRef = useRef<any>(null);
+  const loopIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const playStateRef = useRef<boolean>(false);
 
   // Load draft data
@@ -156,7 +156,7 @@ function BrandContent() {
     const theme = draft.brandVariables.audioTheme;
 
     // 1. Initialize Audio Context
-    const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+    const AudioContextClass = window.AudioContext || (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
     const ctx = new AudioContextClass();
     audioCtxRef.current = ctx;
 
@@ -315,7 +315,7 @@ function BrandContent() {
     loopIntervalRef.current = setInterval(scheduleNextNotes, intervalMs);
   };
 
-  const stopJingle = () => {
+  function stopJingle() {
     playStateRef.current = false;
     setIsPlaying(false);
 

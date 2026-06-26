@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { dbClient } from "@/data/dbClient";
-import { analyzeCraftImage, generateProductCopy, generateProductBanner, refineProductBanner } from "@/lib/gemini";
+import { dbClient, Product } from "@/data/dbClient";
+import { analyzeCraftImage, generateProductCopy, generateProductBanner, refineProductBanner, generateStudioImageFromPrompt } from "@/lib/gemini";
+import { PreferencesAgent, PromptEngineeringAgent, DesignerAgent } from "@/lib/agents";
 
 
 export async function GET(request: NextRequest) {
@@ -17,7 +18,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const { brandId, rawImage } = await request.json();
+    const { brandId, rawImage, sceneDescription, adCopyTone, keywords } = await request.json();
     if (!brandId || !rawImage) {
       return NextResponse.json({ error: "brandId and rawImage are required" }, { status: 400 });
     }
@@ -37,26 +38,33 @@ export async function POST(request: NextRequest) {
     const analysis = await analyzeCraftImage(rawImage);
 
     // 3. Generate product-specific title, description, and tagline matching brand style
+    // Use target adCopyTone if provided
     const copy = await generateProductCopy(
       brandVars.brandName,
-      brandVars.brandDescription,
+      adCopyTone ? `${brandVars.brandDescription} [Tone priority: ${adCopyTone}]` : brandVars.brandDescription,
       analysis.productType,
       analysis.materials,
       analysis.textures,
       analysis.craftsmanship
     );
 
-    // 4. Generate campaign showcase banner (Imagen 3)
-    const brandMood = brandVars.audioTheme?.mood || "organic";
-    const bannerImage = await generateProductBanner(
-      brandVars.brandName,
-      brandMood,
-      copy.name,
-      copy.tagline,
-      analysis.imagenPromptDescription
+    // 4. Generate campaign showcase studio image (Imagen 3) using PromptEngineeringAgent
+    const studioPrompt = PromptEngineeringAgent.generateStudioImagePrompt(
+      analysis.productType,
+      analysis.materials,
+      analysis.textures,
+      analysis.craftsmanship,
+      analysis.imagenPromptDescription,
+      brandId,
+      sceneDescription
     );
 
-    // 5. Save product in database
+    const bannerImage = await generateStudioImageFromPrompt(
+      studioPrompt,
+      "16:9"
+    );
+
+    // 5. Save product in database with questionnaire details
     const newProduct = dbClient.createProduct(brandId, {
       name: copy.name,
       description: copy.description,
@@ -67,6 +75,9 @@ export async function POST(request: NextRequest) {
       textures: analysis.textures,
       craftsmanship: analysis.craftsmanship,
       imagenPromptDescription: analysis.imagenPromptDescription,
+      sceneDescription: sceneDescription || "",
+      adCopyTone: adCopyTone || "Earthy & Organic",
+      keywords: keywords || [],
     });
 
     return NextResponse.json(newProduct, { status: 201 });
@@ -91,7 +102,7 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
 
-    const updates: any = {};
+    const updates: Partial<Omit<Product, "id" | "brandId" | "createdAt">> = {};
     if (name !== undefined) updates.name = name;
     if (tagline !== undefined) updates.tagline = tagline;
     if (description !== undefined) updates.description = description;

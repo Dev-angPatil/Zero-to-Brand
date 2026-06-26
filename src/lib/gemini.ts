@@ -207,15 +207,26 @@ export async function chatWithCoPilot(
   }
 
   try {
-    const contents: any[] = [];
+    const contents: Array<{
+      role?: string;
+      parts: Array<{
+        text?: string;
+        inlineData?: { mimeType: string; data: string };
+      }>;
+    }> = [];
 
     if (base64Image) {
       const parsed = parseBase64(base64Image);
       contents.push({
-        inlineData: {
-          mimeType: parsed.mimeType,
-          data: parsed.data,
-        },
+        role: "user",
+        parts: [
+          {
+            inlineData: {
+              mimeType: parsed.mimeType,
+              data: parsed.data,
+            },
+          },
+        ],
       });
     }
 
@@ -553,6 +564,37 @@ Write a revised, highly descriptive, single-paragraph prompt for Imagen 3 (image
     return base64 ? `data:image/jpeg;base64,${base64}` : "/images/simulated_banner.png";
   } catch (error) {
     console.error("Imagen Banner Refinement Error:", error);
+    return "/images/simulated_banner.png";
+  }
+}
+
+export async function generateStudioImageFromPrompt(
+  prompt: string,
+  aspectRatio = "16:9"
+): Promise<string> {
+  if (isSimulated || !ai) {
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    return "/images/simulated_banner.png";
+  }
+
+  try {
+    const validRatios = ["1:1", "3:4", "4:3", "9:16", "16:9"];
+    const targetRatio = validRatios.includes(aspectRatio) ? aspectRatio : "16:9";
+
+    const resp = await ai.models.generateImages({
+      model: "imagen-3.0-generate-002",
+      prompt: prompt,
+      config: {
+        numberOfImages: 1,
+        outputMimeType: "image/jpeg",
+        aspectRatio: targetRatio,
+      },
+    });
+
+    const base64 = resp.generatedImages?.[0]?.image?.imageBytes;
+    return base64 ? `data:image/jpeg;base64,${base64}` : "/images/simulated_banner.png";
+  } catch (error) {
+    console.error("Imagen Studio Generation Error:", error);
     return "/images/simulated_banner.png";
   }
 }

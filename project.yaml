@@ -1,0 +1,49 @@
+name: Zero-to-Brand
+hackathon_fit_score: 9.2
+maturity: Gold
+status: Complete
+has_frontend: true
+tech_stack:
+- Next.js
+- Node.js
+design_md_used: solarpunk
+last_loop_run: '2026-06-25'
+hackathon: Ship to Get Hired - Gappy AI Hackathon
+team: Dev-ang Patil
+tagline: The Autonomous Artisan Branding & Storefront Engine
+domain: saas
+tasks_completed:
+- Created submission folder
+- Generated devpost_submission.md
+- Generated demo_script.md
+- Generated judging_checklist.md
+- Generated pitch_deck_outline.md
+- Generated build_instructions.md
+- Generated team.md
+- Configured .gitignore for submission/
+- Added Competition section to README.md
+tasks_remaining: []
+blockers: []
+problem_statement: Micro-merchants struggle with high agency branding fees and complex
+  tech storefront setup.
+solution_overview: Autonomous multi-agent system generating logo, studio marketing
+  banners, copy, and storefront from a single seed craft photo.
+technical_architecture: Next.js 16 App Router styled with Tailwind CSS v4, calling
+  Gemini 2.5 Flash and Imagen 3 via @google/genai.
+business_model: SaaS subscription for artisan creators and local storefront operators.
+track_alignment: AI Product Engineer / AI Product Manager tracks.
+build_story: Co-piloted design system featuring solarpunk aesthetics and custom Canvas
+  Poster Compositor.
+roadmap: Integrate direct social media publishing and full Lemma SDK distributed database
+  state sync.
+pitch_points: A complete design agency in a single product photo upload.
+second_brain_context: /home/deu/Second Brain/10 AI/Context/Coding Repos/Zero-to-Brand/Ctx
+  - Zero-to-Brand Context.md
+notes: 'Domain: ai, green, workflow'
+path: /home/deu/Coding Repos/Zero-to-Brand
+submission_quality: 100
+submission_gaps: []
+submission_folder_created: '2026-06-25'
+submission_last_updated: '2026-06-25'
+tier: Tier 2
+potential_winnings: 5000
