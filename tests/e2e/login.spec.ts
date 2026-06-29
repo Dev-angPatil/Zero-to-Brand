@@ -40,11 +40,13 @@ test.describe("Login & Onboarding Flow", () => {
     await page.click("text=Next Step");
 
     // 4. Complete Step 2: Vibe & Style Selection
+    await page.waitForSelector("text=Select your brand style guide");
     await page.click("text=Next Step");
 
     // 5. Complete Step 3: Photo Upload
+    await page.waitForSelector("text=Upload signature craft photo");
     const mockImageBuffer = Buffer.from(
-      "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==",
+      "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5AElFTkSuQmCC",
       "base64"
     );
 
