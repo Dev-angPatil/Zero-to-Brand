@@ -34,7 +34,7 @@ function LandingContent() {
 
   // Wizard state
   // 0 = Welcome/Selector (skipped if brands.length === 0), 1 = Brand Info, 2 = Vibe & Style, 3 = Upload
-  const [wizardStep, setWizardStep] = useState(0);
+  const [wizardStep, setWizardStep] = useState(1);
   const [userBrandName, setUserBrandName] = useState("");
   const [userProductType, setUserProductType] = useState("");
   const [userStyle, setUserStyle] = useState("Solarpunk");
@@ -48,9 +48,6 @@ function LandingContent() {
         const data = await res.json();
         const completedBrands = data.filter((b: Brand) => b.status === "completed");
         setBrands(completedBrands);
-        if (completedBrands.length === 0) {
-          setWizardStep(1);
-        }
       }
     } catch (error) {
       console.error("Error fetching brands:", error);
@@ -60,20 +57,9 @@ function LandingContent() {
   };
 
   useEffect(() => {
-    const activeId = queryDraftId || localStorage.getItem("activeBrandId");
-    if (activeId && !queryDraftId) {
-      fetch(`/api/brands?id=${activeId}`).then((res) => {
-        if (res.ok) {
-          router.push(`/brand?draftId=${activeId}`);
-        } else {
-          localStorage.removeItem("activeBrandId");
-          fetchBrands();
-        }
-      });
-    } else {
-      fetchBrands();
-    }
-  }, [queryDraftId, router]);
+    fetchBrands();
+    setWizardStep(1); // Always start on onboarding flow by default!
+  }, []);
 
   const handleSelectBrand = (brandId: string) => {
     localStorage.setItem("activeBrandId", brandId);
@@ -390,15 +376,7 @@ function LandingContent() {
                   </div>
                 </div>
 
-                <div className="flex gap-4 mt-4">
-                  {brands.length > 0 && (
-                    <button
-                      onClick={() => setWizardStep(0)}
-                      className="flex-1 py-3 bg-surface border border-outline-variant text-on-surface hover:bg-surface-container rounded-xl font-label text-xs font-bold transition-all cursor-pointer"
-                    >
-                      Back to workspaces
-                    </button>
-                  )}
+                 <div className="flex flex-col gap-3 mt-4">
                   <button
                     onClick={() => {
                       if (!userBrandName || !userProductType) {
@@ -407,11 +385,20 @@ function LandingContent() {
                       }
                       setWizardStep(2);
                     }}
-                    className="flex-1 py-3 bg-primary text-on-primary hover:opacity-95 rounded-xl font-label text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-1.5 cursor-pointer"
+                    className="w-full py-3.5 bg-primary text-on-primary hover:opacity-95 rounded-xl font-label text-sm font-bold transition-all shadow-sm flex items-center justify-center gap-1.5 cursor-pointer"
                   >
                     Next Step
                     <span className="material-symbols-outlined text-sm">arrow_forward</span>
                   </button>
+
+                  {brands.length > 0 && (
+                    <button
+                      onClick={() => setWizardStep(0)}
+                      className="w-full py-3 bg-surface border border-outline-variant text-on-surface hover:bg-surface-container rounded-xl font-label text-xs font-bold transition-all cursor-pointer"
+                    >
+                      Or enter an existing workspace
+                    </button>
+                  )}
                 </div>
               </section>
             )}
