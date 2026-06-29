@@ -27,14 +27,22 @@ test.describe("Login & Onboarding Flow", () => {
     }
   });
 
-  test("should render the landing page, upload a craft image, and redirect to brand reveal dashboard", async ({ page }) => {
+  test("should render the landing page, complete the 3-step wizard, upload a craft image, and redirect to brand reveal dashboard", async ({ page }) => {
     // 1. Navigate to the landing page
     await page.goto("/");
 
     // 2. Assert page header is visible
     await expect(page.locator("h1")).toHaveText("Your Brand, Handcrafted");
 
-    // 3. Upload a mock craft image file
+    // 3. Complete Step 1: Brand Info
+    await page.fill("#brandName", "Varnam Crafted");
+    await page.fill("#productType", "Terracotta Clay Pot");
+    await page.click("text=Next Step");
+
+    // 4. Complete Step 2: Vibe & Style Selection
+    await page.click("text=Next Step");
+
+    // 5. Complete Step 3: Photo Upload
     const mockImageBuffer = Buffer.from(
       "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==",
       "base64"
@@ -48,7 +56,7 @@ test.describe("Login & Onboarding Flow", () => {
       buffer: mockImageBuffer,
     });
 
-    // 4. Assert that it shows progress state, then redirects to /brand with a draftId
+    // 6. Assert that it shows progress state, then redirects to /brand with a draftId
     await page.waitForURL(/\/brand\?draftId=.+/, { timeout: 15000 });
 
     // Verify brand page elements

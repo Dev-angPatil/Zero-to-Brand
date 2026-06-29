@@ -17,27 +17,60 @@ export async function POST(request: NextRequest) {
     // Call Gemini to analyze the image
     const analysis = await analyzeCraftImage(brand.rawImage);
 
-    // Initialize brand variables using the suggested values
+    // Check for user-defined configuration to override defaults
+    let brandName = analysis.suggestedBrandName;
+    let colors = {
+      primary: "#264e2b", // Solarpunk default
+      secondary: "#fcd03d",
+      background: "#f7faf2",
+    };
+    let audioTheme: {
+      tempo: number;
+      scale: "major" | "minor" | "pentatonic";
+      instrument: "acoustic" | "warm-synth" | "bell";
+      mood: "organic" | "modern" | "luxury";
+    } = {
+      tempo: 90,
+      scale: "pentatonic",
+      instrument: "acoustic",
+      mood: "organic",
+    };
+    let style = "Solarpunk";
+
+    if (brand.config) {
+      if (brand.config.ownerName) {
+        brandName = brand.config.ownerName;
+      }
+      if (brand.config.designStyle) {
+        style = brand.config.designStyle;
+        if (style === "Minimalist") {
+          colors = { primary: "#1a1a1a", secondary: "#8c7b6c", background: "#faf8f5" };
+          audioTheme = { tempo: 100, scale: "major" as const, instrument: "bell" as const, mood: "modern" as const };
+        } else if (style === "Cyberpunk") {
+          colors = { primary: "#ff007f", secondary: "#00f0ff", background: "#0a0512" };
+          audioTheme = { tempo: 120, scale: "minor" as const, instrument: "warm-synth" as const, mood: "modern" as const };
+        } else if (style === "Vintage") {
+          colors = { primary: "#4e2f1d", secondary: "#b58c56", background: "#f5f0eb" };
+          audioTheme = { tempo: 80, scale: "minor" as const, instrument: "acoustic" as const, mood: "luxury" as const };
+        } else if (style === "Cozy") {
+          colors = { primary: "#a64b2a", secondary: "#d99f59", background: "#faf5f0" };
+          audioTheme = { tempo: 85, scale: "pentatonic" as const, instrument: "acoustic" as const, mood: "organic" as const };
+        }
+      }
+    }
+
+    // Initialize brand variables using the suggested or user-configured values
     const initialBrandVariables = {
-      brandName: analysis.suggestedBrandName,
+      brandName,
       brandDescription: `Authentic artisan brand showcasing premium ${analysis.productType.toLowerCase()} crafted from ${analysis.materials.join(", ").toLowerCase()}.`,
       tagline: analysis.suggestedTagline,
-      colors: {
-        primary: "#264e2b", // Solarpunk default deep olive green
-        secondary: "#fcd03d", // Sunflower yellow accent
-        background: "#f7faf2", // Sage cream
-      },
+      colors,
       logoSvg: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
         <path d="M50,15 C20,35 20,65 50,85 C80,65 80,35 50,15 Z" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
         <path d="M50,35 C35,45 35,55 50,70 C65,55 65,45 50,35 Z" fill="currentColor"/>
       </svg>`,
-      adBannerCopy: "Crafted by hand. Styled by nature.",
-      audioTheme: {
-        tempo: 90,
-        scale: "pentatonic" as const,
-        instrument: "acoustic" as const,
-        mood: "organic" as const,
-      },
+      adBannerCopy: `Discover ${brandName}. Crafted by hand.`,
+      audioTheme,
     };
 
     // Save analysis and variables back to the brand
