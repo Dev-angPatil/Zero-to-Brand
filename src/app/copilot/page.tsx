@@ -268,7 +268,7 @@ function CopilotContent() {
         </div>
 
         {/* Messages list */}
-        <div className="flex-grow overflow-y-auto p-4 md:p-6 flex flex-col gap-6">
+        <div className="flex-grow overflow-y-auto p-4 md:p-6 flex flex-col gap-6 scrollbar-thin">
           {messages.map((msg, idx) => {
             const isModel = msg.role === "model";
             return (
@@ -279,21 +279,21 @@ function CopilotContent() {
                 }`}
               >
                 {isModel ? (
-                  <div className="w-8 h-8 rounded-full bg-tertiary flex-shrink-0 flex items-center justify-center shadow-sm">
-                    <span className="material-symbols-outlined text-on-tertiary text-lg">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-secondary to-secondary-container flex-shrink-0 flex items-center justify-center shadow-sm">
+                    <span className="material-symbols-outlined text-on-secondary-container text-md">
                       smart_toy
                     </span>
                   </div>
                 ) : (
-                  <div className="w-8 h-8 rounded-full bg-primary flex-shrink-0 flex items-center justify-center shadow-sm text-on-primary text-sm font-bold">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-primary to-primary-container flex-shrink-0 flex items-center justify-center shadow-sm text-white text-xs font-bold font-label">
                     U
                   </div>
                 )}
                 <div
-                  className={`p-4 rounded-2xl shadow-[0_4px_16px_rgba(62,102,65,0.04)] font-body text-body-md whitespace-pre-line ${
+                  className={`p-4 rounded-2xl shadow-sm font-body text-body-md whitespace-pre-line border transition-all duration-300 ${
                     isModel
-                      ? "bg-tertiary text-on-tertiary rounded-tl-none"
-                      : "bg-surface-container-high text-on-surface rounded-tr-none border border-outline-variant/30"
+                      ? "bg-primary/5 text-primary border-primary/15 rounded-tl-none hover:bg-primary/10"
+                      : "bg-white/80 text-on-surface border-outline-variant/30 rounded-tr-none hover:bg-white"
                   }`}
                 >
                   {msg.content}
@@ -305,12 +305,12 @@ function CopilotContent() {
           {/* Typing indicator */}
           {isSending && (
             <div className="flex items-start gap-3 self-start max-w-[85%] animate-pulse">
-              <div className="w-8 h-8 rounded-full bg-tertiary flex-shrink-0 flex items-center justify-center shadow-sm">
-                <span className="material-symbols-outlined text-on-tertiary text-lg animate-spin">
+              <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-secondary to-secondary-container flex-shrink-0 flex items-center justify-center shadow-sm">
+                <span className="material-symbols-outlined text-on-secondary-container text-md animate-spin">
                   spa
                 </span>
               </div>
-              <div className="p-4 rounded-2xl rounded-tl-none bg-tertiary text-on-tertiary shadow-sm font-body text-sm">
+              <div className="p-4 rounded-2xl rounded-tl-none bg-primary/5 text-primary border border-primary/10 shadow-sm font-body text-sm">
                 Gemini Co-Pilot is refining your brand variables...
               </div>
             </div>

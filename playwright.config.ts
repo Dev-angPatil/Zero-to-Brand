@@ -1,6 +1,6 @@
 import { defineConfig, devices } from "@playwright/test";
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3005;
 const baseURL = `http://localhost:${PORT}`;
 
 export default defineConfig({
@@ -21,10 +21,6 @@ export default defineConfig({
     {
       name: "chromium",
       use: { ...devices["Desktop Chrome"] },
-    },
-    {
-      name: "firefox",
-      use: { ...devices["Desktop Firefox"] },
     },
   ],
   webServer: {

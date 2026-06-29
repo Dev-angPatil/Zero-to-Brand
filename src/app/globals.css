@@ -84,17 +84,6 @@
   --text-label-sm--line-height: 16px;
   --text-label-sm--font-weight: 700;
 
-  /* Spacing */
-  --spacing-base: 8px;
-  --spacing-xs: 4px;
-  --spacing-sm: 12px;
-  --spacing-md: 24px;
-  --spacing-lg: 48px;
-  --spacing-xl: 80px;
-  --spacing-gutter: 24px;
-  --spacing-margin-mobile: 16px;
-  --spacing-margin-desktop: 64px;
-
   /* Border Radius */
   --radius-sm: 0.25rem;
   --radius-DEFAULT: 0.5rem;

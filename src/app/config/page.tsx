@@ -178,9 +178,9 @@ function ConfigContent() {
   ];
 
   return (
-    <div className="w-full max-w-[1280px] mx-auto flex flex-col gap-lg pb-32">
+    <div className="w-full max-w-[1280px] mx-auto flex flex-col gap-12 pb-32">
       {/* Progress Tracker */}
-      <header className="flex flex-col gap-sm items-center w-full max-w-2xl mx-auto text-center mt-4">
+      <header className="flex flex-col gap-3 items-center w-full max-w-2xl mx-auto text-center mt-4">
         <div className="flex items-center gap-2 w-full justify-center text-outline">
           <span className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm shadow-md transition-all ${step >= 1 ? "bg-primary text-on-primary" : "bg-surface-container-high text-on-surface-variant"}`}>
             1
@@ -213,7 +213,7 @@ function ConfigContent() {
       </header>
 
       {/* Main Wizard Step Box */}
-      <div className="max-w-3xl mx-auto w-full bg-surface-container-low border border-outline-variant/30 rounded-[32px] p-6 md:p-10 organic-shadow mt-6">
+      <div className="max-w-3xl mx-auto w-full glass-card rounded-[32px] p-6 md:p-10 shadow-lg mt-6">
         {step === 1 && (
           <div className="flex flex-col gap-6 animate-fade-in">
             <div className="flex flex-col gap-2">
@@ -319,13 +319,17 @@ function ConfigContent() {
 
             <div className="w-full h-px bg-outline-variant/30 my-2"></div>
 
-            <div className="flex flex-col gap-4">
-              <label className="font-headline text-lg text-primary">Aesthetic Dials</label>
+            <div className="flex flex-col gap-6">
+              <div className="flex justify-between items-center">
+                <label className="font-headline text-lg text-primary">Aesthetic Dials</label>
+                <span className="text-[10px] uppercase font-mono text-secondary-container bg-secondary px-2.5 py-0.5 rounded-full font-bold">Interactive dials</span>
+              </div>
               
-              <div className="flex flex-col gap-2">
-                <div className="flex justify-between font-label text-xs text-on-surface-variant font-semibold">
-                  <span>Rustic &amp; Raw</span>
-                  <span>Ultra Luxury</span>
+              <div className="flex flex-col gap-3 p-4 bg-white/40 rounded-2xl border border-outline-variant/30">
+                <div className="flex justify-between font-label text-xs text-on-surface-variant font-bold">
+                  <span className="flex items-center gap-1"><span className="material-symbols-outlined text-sm">agriculture</span>Rustic &amp; Raw</span>
+                  <span className="text-primary font-mono bg-primary/10 px-2 py-0.5 rounded-md text-[11px]">{rusticVsLuxury}%</span>
+                  <span className="flex items-center gap-1">Ultra Luxury<span className="material-symbols-outlined text-sm">workspace_premium</span></span>
                 </div>
                 <input
                   type="range"
@@ -333,14 +337,15 @@ function ConfigContent() {
                   max="100"
                   value={rusticVsLuxury}
                   onChange={(e) => setRusticVsLuxury(Number(e.target.value))}
-                  className="w-full h-2 bg-surface rounded-full appearance-none cursor-pointer accent-primary"
+                  className="w-full h-2 bg-surface-container-highest rounded-full appearance-none cursor-pointer accent-primary focus:outline-none"
                 />
               </div>
 
-              <div className="flex flex-col gap-2">
-                <div className="flex justify-between font-label text-xs text-on-surface-variant font-semibold">
-                  <span>Earthy Workshop</span>
-                  <span>Sun-Drenched Studio</span>
+              <div className="flex flex-col gap-3 p-4 bg-white/40 rounded-2xl border border-outline-variant/30">
+                <div className="flex justify-between font-label text-xs text-on-surface-variant font-bold">
+                  <span className="flex items-center gap-1"><span className="material-symbols-outlined text-sm">handyman</span>Earthy Workshop</span>
+                  <span className="text-primary font-mono bg-primary/10 px-2 py-0.5 rounded-md text-[11px]">{earthyVsSunDrenched}%</span>
+                  <span className="flex items-center gap-1">Sun-Drenched Studio<span className="material-symbols-outlined text-sm">wb_sunny</span></span>
                 </div>
                 <input
                   type="range"
@@ -348,7 +353,7 @@ function ConfigContent() {
                   max="100"
                   value={earthyVsSunDrenched}
                   onChange={(e) => setEarthyVsSunDrenched(Number(e.target.value))}
-                  className="w-full h-2 bg-surface rounded-full appearance-none cursor-pointer accent-primary"
+                  className="w-full h-2 bg-surface-container-highest rounded-full appearance-none cursor-pointer accent-primary focus:outline-none"
                 />
               </div>
             </div>

@@ -53,7 +53,7 @@ function SidebarLinks({
     return (
       <div className="flex-grow flex flex-col justify-between h-full">
         <div className="flex flex-col gap-2">
-          <Link href="/" className={getLinkClass("/", true)}>
+          <Link href={`/brand?draftId=${brandId}`} className={getLinkClass("/brand")}>
             <span className="material-symbols-outlined">dashboard</span>
             Brand Workspace
           </Link>
@@ -66,11 +66,6 @@ function SidebarLinks({
           <Link href={`/copilot?draftId=${brandId}`} className={getLinkClass("/copilot")}>
             <span className="material-symbols-outlined">smart_toy</span>
             Co-Pilot Chat
-          </Link>
-
-          <Link href={`/brand?draftId=${brandId}`} className={getLinkClass("/brand")}>
-            <span className="material-symbols-outlined">style</span>
-            Asset Hub
           </Link>
 
           <a
@@ -167,14 +162,14 @@ function DashboardLayoutContent({ children }: { children: React.ReactNode }) {
 
   const [activeBrand, setActiveBrand] = useState<Brand | null>(null);
   const onboardId = searchParams.get("draftId");
-  const [isReady, setIsReady] = useState(pathname === "/login");
+  const [isReady, setIsReady] = useState(pathname === "/" || pathname === "/login");
 
   useEffect(() => {
     const activeId = localStorage.getItem("activeBrandId");
     const queryDraftId = searchParams.get("draftId");
 
-    // If we are on login page, just show it
-    if (pathname === "/login") {
+    // If we are on landing or login page, just show it
+    if (pathname === "/" || pathname === "/login") {
       return;
     }
 
@@ -183,7 +178,7 @@ function DashboardLayoutContent({ children }: { children: React.ReactNode }) {
       const targetId = activeId || queryDraftId;
 
       if (!targetId) {
-        router.push("/login");
+        router.push("/");
         return;
       }
 
@@ -200,7 +195,7 @@ function DashboardLayoutContent({ children }: { children: React.ReactNode }) {
         } else {
           // If brand not found, clear and redirect
           localStorage.removeItem("activeBrandId");
-          router.push("/login");
+          router.push("/");
         }
       } catch (error) {
         console.error("Error loading brand layout context:", error);
@@ -212,7 +207,7 @@ function DashboardLayoutContent({ children }: { children: React.ReactNode }) {
     loadBrandContext();
   }, [searchParams, pathname, router]);
 
-  if (!isReady && pathname !== "/login") {
+  if (!isReady && pathname !== "/" && pathname !== "/login") {
     return (
       <div className="h-screen w-screen flex flex-col items-center justify-center bg-background text-primary">
         <div className="w-12 h-12 rounded-full border-4 border-primary border-t-transparent animate-spin"></div>
@@ -227,8 +222,8 @@ function DashboardLayoutContent({ children }: { children: React.ReactNode }) {
   return (
     <div className="h-screen w-screen flex flex-col bg-background text-on-background selection:bg-primary-container selection:text-on-primary-container font-body overflow-hidden">
       {/* Top Navigation Header */}
-      <header className="flex-shrink-0 w-full flex justify-between items-center px-4 md:px-margin-desktop h-20 bg-surface border-b border-outline-variant/30 shadow-[0_4px_20px_rgba(62,102,65,0.04)] z-50">
-        <div className="flex items-center gap-gutter">
+      <header className="flex-shrink-0 w-full flex justify-between items-center px-4 md:px-16 h-20 bg-surface border-b border-outline-variant/30 shadow-[0_4px_20px_rgba(62,102,65,0.04)] z-50">
+        <div className="flex items-center gap-6">
           <Link href="/" className="flex items-center gap-2">
             <span className="material-symbols-outlined text-primary text-3xl font-bold">
               spa
@@ -253,7 +248,7 @@ function DashboardLayoutContent({ children }: { children: React.ReactNode }) {
           )}
         </div>
 
-        <div className="flex items-center gap-md">
+        <div className="flex items-center gap-6">
           {isCompleted && vars ? (
             <span className="hidden lg:inline-block font-label text-label-md text-on-surface">
               Active: <strong>{vars.brandName}</strong>
@@ -263,7 +258,7 @@ function DashboardLayoutContent({ children }: { children: React.ReactNode }) {
               Brand Sandbox Onboarding
             </span>
           )}
-          <div className="flex items-center gap-sm">
+          <div className="flex items-center gap-3">
             <button className="text-primary hover:text-secondary p-2 rounded-full hover:bg-surface-container transition-colors">
               <span className="material-symbols-outlined">notifications</span>
             </button>

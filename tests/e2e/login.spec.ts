@@ -27,9 +27,9 @@ test.describe("Login & Onboarding Flow", () => {
     }
   });
 
-  test("should render the login page, upload a craft image, and redirect to config onboarding", async ({ page }) => {
-    // 1. Navigate to the login page
-    await page.goto("/login");
+  test("should render the landing page, upload a craft image, and redirect to brand reveal dashboard", async ({ page }) => {
+    // 1. Navigate to the landing page
+    await page.goto("/");
 
     // 2. Assert page header is visible
     await expect(page.locator("h1")).toHaveText("Your Brand, Handcrafted");
@@ -48,11 +48,11 @@ test.describe("Login & Onboarding Flow", () => {
       buffer: mockImageBuffer,
     });
 
-    // 4. Assert that it shows progress state, then redirects to /config with a draftId
-    await page.waitForURL(/\/config\?draftId=.+/, { timeout: 15000 });
+    // 4. Assert that it shows progress state, then redirects to /brand with a draftId
+    await page.waitForURL(/\/brand\?draftId=.+/, { timeout: 15000 });
 
-    // Verify config page elements
-    expect(page.url()).toContain("/config");
+    // Verify brand page elements
+    expect(page.url()).toContain("/brand");
     expect(page.url()).toContain("draftId=");
   });
 });
